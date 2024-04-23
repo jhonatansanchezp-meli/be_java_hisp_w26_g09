@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IPostRepository {
     public List<Post> findAll();
+    public void createPost(Post post);
 }

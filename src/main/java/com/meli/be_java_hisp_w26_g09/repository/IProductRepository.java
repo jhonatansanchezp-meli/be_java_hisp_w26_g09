@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface IProductRepository {
     public List<Product> findAll();
+    public Boolean isCreated(Product product);
+    public void createProduct(Product product);
 }

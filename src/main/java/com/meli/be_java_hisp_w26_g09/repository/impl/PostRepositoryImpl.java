@@ -35,4 +35,9 @@ public class PostRepositoryImpl implements IPostRepository {
     public List<Post> findAll() {
         return listOfPost;
     }
+
+    @Override
+    public void createPost(Post post) {
+        listOfPost.add(post);
+    }
 }
