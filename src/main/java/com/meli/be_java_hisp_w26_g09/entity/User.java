@@ -11,5 +11,5 @@ public class User {
     private Integer userId;
     private String userName;
     private Role role;
-    private List<User> followers;
+    private List<User> followed;
 }
