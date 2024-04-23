@@ -10,12 +10,6 @@ import java.util.List;
 public class User {
     private Integer userId;
     private String userName;
-<<<<<<< HEAD
     private Role role;
     private List<User> followers;
-=======
-    private Boolean seller;
-    private List<Integer> followers;
-    private List<Integer> followed;
->>>>>>> da7af95 (updated repository)
 }
