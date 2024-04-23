@@ -31,6 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 
 # macOS
 .DS_Store
+=======
+>>>>>>> da7af95 (updated repository)
