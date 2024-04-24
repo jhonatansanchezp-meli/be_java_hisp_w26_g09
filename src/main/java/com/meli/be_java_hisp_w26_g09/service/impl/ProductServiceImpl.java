@@ -24,8 +24,11 @@ import java.util.stream.Stream;
 public class ProductServiceImpl implements IProductService {
     @Autowired
     IProductRepository productRepository;
+    @Autowired
     IPostRepository postRepository;
+    @Autowired
     IUserRepository userRepository;
+    @Autowired
     PostMapper postMapper;
 
     @Override
