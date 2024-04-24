@@ -41,10 +41,18 @@ public class UserRepositoryImpl implements IUserRepository {
                 .findFirst();
     }
 
-
     @Override
     public List<User> findAll() {
         return listOfUser;
     }
 
+    @Override
+    public void unfollowUser(User userWhoUnfollow, User userToUnfollow) {
+        int index = listOfUser.indexOf(userToUnfollow);
+        userWhoUnfollow.getFollowed().remove(userToUnfollow);
+        if(index >= 0){
+            listOfUser.set(index, userWhoUnfollow);
+        }
+
+    }
 }

@@ -1,5 +1,7 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
+import com.meli.be_java_hisp_w26_g09.dto.ExceptionDTO;
+import com.meli.be_java_hisp_w26_g09.dto.ResponseDTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
@@ -61,7 +63,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     
-    public UserDTO getFollowedByIdOrdered(Integer id, String order)  {
+    public UserDTO getFollowedByIdOrdered(Integer id, String order) {
         UserDTO userDTO = getFollowedById(id);
 
         if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
@@ -82,5 +84,31 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userDTO;
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> userMapper.userToUserDTO(user))
+                .toList();
+    }
+
+    @Override
+    public ResponseDTO unfollowUser(int userId, int userIdToUnfollow) {
+        Optional<User> userWhoUnfollowOptional = userRepository.findById(userId);
+
+        if(userWhoUnfollowOptional.isEmpty()) throw new NotFoundException("User not found");
+
+        User userWhoUnfollow = userWhoUnfollowOptional.get();
+        List<User> followedUsers = userWhoUnfollow.getFollowed();
+
+        Optional<User> userToUnfollowOptional = followedUsers.stream()
+                .filter(user -> user.getUserId() == userIdToUnfollow)
+                .findFirst();
+
+        if(userToUnfollowOptional.isEmpty()) throw new NotFoundException("User not found in followers list");
+
+        User userToUnfollow = userToUnfollowOptional.get();
+        userRepository.unfollowUser(userWhoUnfollow, userToUnfollow);
+        return new ResponseDTO("Unfollow successfull");
     }
 }
