@@ -1,4 +1,4 @@
-package com.meli.be_java_hisp_w26_g09.mapper;
+package com.meli.be_java_hisp_w26_g09.util.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
