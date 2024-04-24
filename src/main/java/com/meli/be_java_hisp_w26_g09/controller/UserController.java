@@ -3,10 +3,7 @@ package com.meli.be_java_hisp_w26_g09.controller;
 import com.meli.be_java_hisp_w26_g09.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -24,6 +21,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getFollowersById(userId));
     }
 
+
+    @GetMapping("{userId}/followeds/list")
+    public ResponseEntity<?> getFollowedSorted(@PathVariable Integer userId,
+                                               @RequestParam String order){
+        return ResponseEntity.ok(userService.getFollowedByIdOrdered(userId, order));
+    }
 
 
 }
