@@ -36,17 +36,16 @@ public class ProductServiceImpl implements IProductService {
         if(post.getPrice()<0){
             throw new BadRequestException("The price cannot be negative");
         }
-        //The discount must be between 0 and 1
-        if(post.getDiscount()>1 || post.getDiscount()<0){
-            throw new BadRequestException("The discount is not valid");
+        post.setHas_promo(false);
+        if(post.getDiscount()!=null && post.getDiscount() != 0.0){
+            throw new BadRequestException("Cannot add a promo post on this end point");
         }
+        post.setDiscount(0.0);
         if(Stream.of(post.getUserId(),
                 post.getDate() ,
                 post.getProduct(),
                 post.getCategory(),
-                post.getPrice(),
-                post.getHas_promo(),
-                post.getDiscount()).anyMatch(Objects::isNull)){
+                post.getPrice()).anyMatch(Objects::isNull)){
             throw new BadRequestException("No field can be null");
         }
         if(userRepository.findById(post.getUserId()).isEmpty()){
