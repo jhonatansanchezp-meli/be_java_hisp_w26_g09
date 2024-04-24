@@ -11,4 +11,5 @@ public interface IUserRepository {
     List<User> findAll();
     void unfollowUser(User userWhoUnfollow, User userToUnfollow);
 
+    void addFollowed(User customer, User seller);
 }

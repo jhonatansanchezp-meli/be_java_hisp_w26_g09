@@ -15,4 +15,6 @@ public interface IUserService {
 
     ResponseDTO unfollowUser(int userId, int userToUnfollow);
 
+    ResponseDTO follow(Integer userId, Integer userIdToFollow);
+    
 }

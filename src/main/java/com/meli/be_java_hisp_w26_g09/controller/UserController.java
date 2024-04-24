@@ -2,6 +2,7 @@ package com.meli.be_java_hisp_w26_g09.controller;
 
 import com.meli.be_java_hisp_w26_g09.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @PostMapping("/{userId}/follow/{userIdToFollow}")
+    public ResponseEntity<?> postFollow(@PathVariable Integer userId, @PathVariable Integer userIdToFollow){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.follow(userId, userIdToFollow));
     }
 
     @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
