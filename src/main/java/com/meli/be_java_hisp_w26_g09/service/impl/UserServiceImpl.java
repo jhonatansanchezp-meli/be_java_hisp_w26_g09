@@ -63,7 +63,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     
-    public UserDTO getFollowedByIdOrdered(Integer id, String order)  {
+    public UserDTO getFollowedByIdOrdered(Integer id, String order) {
         UserDTO userDTO = getFollowedById(id);
 
         if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
@@ -84,6 +84,8 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userDTO;
+    }
+
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> userMapper.userToUserDTO(user))
