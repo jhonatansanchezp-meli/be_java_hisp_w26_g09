@@ -12,20 +12,16 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+
     @GetMapping("/{userId}/followed/list")
-    public ResponseEntity<?> getFollowed(@PathVariable Integer userId){
-        return ResponseEntity.ok(userService.getFollowedById(userId));
-    }
-    @GetMapping("/{userId}/followers/list")
-    public ResponseEntity<?> getFollowers(@PathVariable Integer userId){
-        return ResponseEntity.ok(userService.getFollowersById(userId));
-    }
 
+        public ResponseEntity<?> getFollowedList(@PathVariable Integer userId,
+                                             @RequestParam(required = false) String order){
+        if (order == null || order.isEmpty())
+            return ResponseEntity.ok(userService.getFollowedById(userId));
 
-    @GetMapping("{userId}/followeds/list")
-    public ResponseEntity<?> getFollowedSorted(@PathVariable Integer userId,
-                                               @RequestParam String order){
         return ResponseEntity.ok(userService.getFollowedByIdOrdered(userId, order));
+
     }
 
 

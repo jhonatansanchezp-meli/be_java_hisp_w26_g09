@@ -3,6 +3,7 @@ package com.meli.be_java_hisp_w26_g09.service.impl;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
+import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
 import com.meli.be_java_hisp_w26_g09.exception.NotContentFollowedException;
 import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
 import com.meli.be_java_hisp_w26_g09.util.mapper.UserMapper;
@@ -59,8 +60,13 @@ public class UserServiceImpl implements IUserService {
         return userMapper.userFollowersToUserDTO(userFollowers.get());
     }
 
-    public UserDTO getFollowedByIdOrdered(Integer id, String order) {
+    
+    public UserDTO getFollowedByIdOrdered(Integer id, String order)  {
         UserDTO userDTO = getFollowedById(id);
+
+        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
+            throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
+        }
 
 
         if ("name_asc".equalsIgnoreCase(order)) {
