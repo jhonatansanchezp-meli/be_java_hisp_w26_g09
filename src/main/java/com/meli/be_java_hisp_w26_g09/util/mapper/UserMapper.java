@@ -1,9 +1,7 @@
 package com.meli.be_java_hisp_w26_g09.util.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meli.be_java_hisp_w26_g09.dto.User2DTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
-import com.meli.be_java_hisp_w26_g09.dto.UserResponseDTO;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import org.springframework.stereotype.Component;
 
@@ -28,21 +26,6 @@ public class UserMapper {
         return userDTO;
     }
 
-
-    public User2DTO userToUserDTO2(User user) {
-
-        if (user == null || user.getUserId() == null)
-            return new User2DTO();
-
-        User2DTO userDTO = new User2DTO();
-        userDTO.setUser_id(user.getUserId());
-        userDTO.setUser_name(user.getUserName());
-        userDTO.setFollowers(
-                (user.getFollowed() != null
-                        && user.getFollowed().isEmpty()) ? null :
-                        user.getFollowed().stream().map(users -> new UserResponseDTO(users.getUserId(), userDTO.getUser_name())).toList());
-        return userDTO;
-    }
 
 
     public User userDTOToUser(UserDTO userDTO) {
@@ -89,11 +72,15 @@ public class UserMapper {
         return userDTO;
     }
 
-    public User2DTO userFollowersToUserDTO2(User user) {
+    public UserDTO userFollowersToUserDTO(User user) {
         if (user == null || user.getUserId() == null)
-            return new User2DTO();
+            return new UserDTO();
 
-        return userToUserDTO2(user);
+        UserDTO userDTO = userToUserDTO(user);
+        userDTO.setFollowers(userDTO.getFollowed());
+        userDTO.setFollowed(null);
+        userDTO.getFollowers().forEach(userDto -> userDto.setFollowed(null));
+        return userDTO;
     }
 
 

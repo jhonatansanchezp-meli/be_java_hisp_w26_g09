@@ -1,6 +1,5 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
-import com.meli.be_java_hisp_w26_g09.dto.User2DTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
@@ -39,18 +38,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User2DTO getFollowersById(Integer id) {
+    public UserDTO getFollowersById(Integer id) {
         Optional<User> userFollowers = userRepository.findById(id);
         if (userFollowers.isEmpty())
             throw new NotFoundException("No information was found about those followed.");
 
         if(userFollowers.get().getRole() != null && userFollowers.get().getRole().getIdRole().equals(Role.ID_CUSTOMER))
             throw new NotContentFollowedException("The customers don't have an option for followers");
-
-        if(userFollowers.get().getFollowed() == null || userFollowers.get().getFollowed().isEmpty())
-        {
-            throw new NotContentFollowedException("The customer has no followers");
-        }
 
         List<User> users = userRepository.findAll();
 
@@ -60,7 +54,7 @@ public class UserServiceImpl implements IUserService {
 
         userFollowers.get().setFollowed(followers);
 
-        return userMapper.userFollowersToUserDTO2(userFollowers.get());
+        return userMapper.userFollowersToUserDTO(userFollowers.get());
     }
 
 }

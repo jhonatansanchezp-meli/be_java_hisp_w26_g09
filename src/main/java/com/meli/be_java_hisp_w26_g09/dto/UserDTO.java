@@ -22,4 +22,5 @@ public class UserDTO {
     @JsonIgnore
     private RoleDTO role;
     private List<UserDTO> followed;
+    private List<UserDTO> followers;
 }
