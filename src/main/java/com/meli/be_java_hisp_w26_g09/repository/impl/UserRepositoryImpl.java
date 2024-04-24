@@ -2,6 +2,7 @@ package com.meli.be_java_hisp_w26_g09.repository.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.entity.Product;
 import com.meli.be_java_hisp_w26_g09.entity.User;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository {
@@ -31,4 +33,15 @@ public class UserRepositoryImpl implements IUserRepository {
         users= objectMapper.readValue(file,new TypeReference<List<User>>(){});
         listOfUser = users;
     }
+
+
+    @Override
+    public Optional<User> findById(Integer id) {
+        if (id == null || id == 0)
+            return Optional.empty();
+
+        return listOfUser.stream().filter(user -> user.getUserId().equals(id))
+                .findFirst();
+    }
+
 }
