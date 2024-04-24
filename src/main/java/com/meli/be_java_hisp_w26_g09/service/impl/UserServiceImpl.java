@@ -61,6 +61,13 @@ public class UserServiceImpl implements IUserService {
         return userMapper.userFollowersToUserDTO(userFollowers.get());
     }
 
+    @Override
+    public UserDTO getFollowedCount(Integer id) {
+        UserDTO user = getFollowersById(id);
+        user.setFollowers_count(user.getFollowers().size());
+        user.setFollowers(null);
+        return user;
+    }
     
     public UserDTO getFollowedByIdOrdered(Integer id, String order) {
         UserDTO userDTO = getFollowedById(id);

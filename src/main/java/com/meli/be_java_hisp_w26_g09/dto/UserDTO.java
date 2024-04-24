@@ -23,4 +23,5 @@ public class UserDTO {
     private RoleDTO role;
     private List<UserDTO> followed;
     private List<UserDTO> followers;
+    private Integer followers_count;
 }
