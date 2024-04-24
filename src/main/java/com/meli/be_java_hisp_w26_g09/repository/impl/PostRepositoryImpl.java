@@ -16,6 +16,7 @@ import java.util.List;
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
     List<Post> listOfPost = new ArrayList<>();
+    Integer contador = 20;
 
     public PostRepositoryImpl() throws IOException {
         loadDataBase();
@@ -33,6 +34,8 @@ public class PostRepositoryImpl implements IPostRepository {
 
     @Override
     public void createPost(Post post) {
+        contador++;
+        post.setId(contador);
         listOfPost.add(post);
     }
 }
