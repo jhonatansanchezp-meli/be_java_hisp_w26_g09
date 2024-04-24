@@ -5,10 +5,10 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum Role {
+public class Role {
 
-    SELLER(1, "Seller"),
-    CUSTOMER(2, "Customer");
+    public static final Integer ID_CUSTOMER = 1;
+    public static final Integer ID_SELLER = 2;
 
     private Integer idRole;
     private String nameRole;

@@ -6,7 +6,6 @@ import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.entity.Product;
 import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
 import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
-
 import com.meli.be_java_hisp_w26_g09.repository.IPostRepository;
 import com.meli.be_java_hisp_w26_g09.repository.IProductRepository;
 import com.meli.be_java_hisp_w26_g09.service.IProductService;
@@ -15,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 

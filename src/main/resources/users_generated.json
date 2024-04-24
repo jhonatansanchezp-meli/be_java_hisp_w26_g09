@@ -2,101 +2,321 @@
   {
     "userId": 1,
     "userName": "JohnDoe",
-    "seller": true
+    "role": {
+     "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [{
+      "userId": 2,
+      "userName": "AliceSmith",
+      "role": {
+        "idRole" : 2,
+        "nameRole" : "Seller"
+      }},
+      {
+        "userId": 4,
+        "userName": "EmilyBrown",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }
+      ]
   },
   {
     "userId": 2,
     "userName": "AliceSmith",
-    "seller": false
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 3,
     "userName": "BobJohnson",
-    "seller": true
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [
+      {
+        "userId": 4,
+        "userName": "EmilyBrown",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }
+    ]
   },
   {
     "userId": 4,
     "userName": "EmilyBrown",
-    "seller": false
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 5,
     "userName": "MichaelDavis",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 6,
     "userName": "JessicaWilson",
-    "seller": false
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [{
+      "userId": 2,
+      "userName": "AliceSmith",
+      "role": {
+        "idRole" : 2,
+        "nameRole" : "Seller"
+      }},
+      {
+        "userId": 4,
+        "userName": "EmilyBrown",
+        "role": {
+          "idRole": 2,
+          "nameRole": "Seller"
+        }
+      },
+      {
+        "userId": 5,
+        "userName": "MichaelDavis",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }
+    ]
   },
   {
     "userId": 7,
     "userName": "DavidMartinez",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 8,
     "userName": "SarahAnderson",
-    "seller": false
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 9,
     "userName": "ChristopherTaylor",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 10,
     "userName": "AmandaThomas",
-    "seller": false
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [
+      {
+        "userId": 9,
+        "userName": "ChristopherTaylor",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      },
+      {
+        "userId": 8,
+        "userName": "SarahAnderson",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }
+
+    ]
   },
   {
     "userId": 11,
     "userName": "JamesLee",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 12,
     "userName": "JenniferGarcia",
-    "seller": false
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [
+      {
+        "userId": 11,
+        "userName": "JamesLee",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      },
+      {
+        "userId": 13,
+        "userName": "MatthewRodriguez",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }
+    ]
   },
   {
     "userId": 13,
     "userName": "MatthewRodriguez",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 14,
     "userName": "MeganLopez",
-    "seller": false
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [
+      {"userId": 15,
+        "userName": "DanielPerez",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      },
+      {
+        "userId": 17,
+        "userName": "RyanGonzalez",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }
+    ]
   },
   {
     "userId": 15,
     "userName": "DanielPerez",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 16,
     "userName": "LaurenHernandez",
-    "seller": false
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [{
+      "userId": 17,
+      "userName": "RyanGonzalez",
+      "role": {
+        "idRole" : 2,
+        "nameRole" : "Seller"
+      }
+    },
+      {
+        "userId": 19,
+        "userName": "BrandonMoore",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }
+    ]
   },
   {
     "userId": 17,
     "userName": "RyanGonzalez",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 18,
     "userName": "AshleyYoung",
-    "seller": false
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [{
+      "userId": 19,
+      "userName": "BrandonMoore",
+      "role": {
+        "idRole" : 2,
+        "nameRole" : "Seller"
+      }
+    },
+      {
+        "userId": 17,
+        "userName": "RyanGonzalez",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }]
   },
   {
     "userId": 19,
     "userName": "BrandonMoore",
-    "seller": true
+    "role": {
+      "idRole" : 2,
+      "nameRole" : "Seller"
+    }
   },
   {
     "userId": 20,
     "userName": "OliviaKing",
-    "seller": false
+    "role": {
+      "idRole" : 1,
+      "nameRole" : "Customer"
+    },
+    "followed" : [{
+      "userId": 17,
+      "userName": "RyanGonzalez",
+      "role": {
+        "idRole" : 2,
+        "nameRole" : "Seller"
+      }
+    },
+      {
+        "userId": 2,
+        "userName": "AliceSmith",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }},
+      {
+        "userId": 4,
+        "userName": "EmilyBrown",
+        "role": {
+          "idRole" : 2,
+          "nameRole" : "Seller"
+        }
+      }]
   }
 ]
