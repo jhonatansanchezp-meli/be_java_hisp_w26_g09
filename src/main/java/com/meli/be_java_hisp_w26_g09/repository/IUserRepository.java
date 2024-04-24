@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface IUserRepository {
 
     Optional<User> findById(Integer id);
+    List<User> findAll();
 
 }
