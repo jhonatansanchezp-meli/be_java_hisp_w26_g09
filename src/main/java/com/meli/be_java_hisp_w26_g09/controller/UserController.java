@@ -13,6 +13,16 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    @GetMapping("/{userId}/followers/list")
+    public ResponseEntity<?> getFollowersList(@PathVariable Integer userId,
+                                             @RequestParam(required = false) String order) {
+        if (order == null || order.isEmpty())
+            return ResponseEntity.ok(userService.getFollowersById(userId));
+
+        return ResponseEntity.ok(userService.getFollowersByIdOrdered(userId, order));
+    }
+
+
     @GetMapping("/{userId}/followed/list")
     public ResponseEntity<?> getFollowedList(@PathVariable Integer userId,
                                              @RequestParam(required = false) String order) {
@@ -41,4 +51,5 @@ public class UserController {
     public ResponseEntity<?> getFollowedCount(@PathVariable Integer userId){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getFollowedCount(userId));
     }
+
 }
