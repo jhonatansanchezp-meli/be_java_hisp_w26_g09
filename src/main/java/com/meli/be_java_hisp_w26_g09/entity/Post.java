@@ -8,6 +8,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 public class Post {
+    private Integer id;
     private Integer userId;
     private Date date;
     private Product product;

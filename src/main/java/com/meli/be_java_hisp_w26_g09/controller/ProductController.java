@@ -4,6 +4,7 @@ import com.meli.be_java_hisp_w26_g09.dto.PostDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,6 @@ public class ProductController {
 
     @PostMapping("/post")
     public ResponseEntity<?> postCreatePost(@RequestBody PostDTO post){
-        return productService.addPost(post);
+        return ResponseEntity.status(HttpStatus.OK).body(productService.addPost(post));
     }
 }
