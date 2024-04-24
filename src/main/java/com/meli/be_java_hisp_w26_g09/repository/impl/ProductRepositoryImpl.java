@@ -33,11 +33,6 @@ public class ProductRepositoryImpl implements IProductRepository {
     }
 
     @Override
-    public List<Product> findAll() {
-        return listOfProduct;
-    }
-
-    @Override
     public Boolean isCreated(Product product) {
         return listOfProduct.stream().anyMatch(p -> p.equals(product));
     }

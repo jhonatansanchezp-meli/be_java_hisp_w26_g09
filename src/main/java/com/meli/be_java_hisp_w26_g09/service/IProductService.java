@@ -8,7 +8,5 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface IProductService {
-    public ResponseEntity<?> searchAllProducts();
-    public ResponseEntity<?> searchAllPosts();
     public ResponseEntity<?> addPost(PostDTO post);
 }
