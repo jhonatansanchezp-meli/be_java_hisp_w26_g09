@@ -1,6 +1,5 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
-import com.meli.be_java_hisp_w26_g09.dto.ExceptionDTO;
 import com.meli.be_java_hisp_w26_g09.dto.ResponseDTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Role;
@@ -110,5 +109,36 @@ public class UserServiceImpl implements IUserService {
         User userToUnfollow = userToUnfollowOptional.get();
         userRepository.unfollowUser(userWhoUnfollow, userToUnfollow);
         return new ResponseDTO("Unfollow successfull");
+    }
+    
+    public ResponseDTO follow(Integer userId, Integer userIdToFollow) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (!userOptional.isPresent())
+            throw new NotFoundException("The user with id " + userId + " was not found.");
+        
+        User customer = userOptional.get();
+
+        userOptional = userRepository.findById(userIdToFollow);
+
+        if (!userOptional.isPresent())
+            throw new NotFoundException("The user with id " + userIdToFollow + " was not found.");
+
+        User seller = userOptional.get();
+        
+        customer.getRole().getIdRole().equals(Role.ID_CUSTOMER);
+
+        if (!customer.getRole().getIdRole().equals(Role.ID_CUSTOMER) || !seller.getRole().getIdRole().equals(Role.ID_SELLER))
+            throw new BadRequestException("Some submitted user does not comply with the role restrictions.");
+        
+        for (User userIterarion : customer.getFollowed()) {
+            if (userIterarion.getUserId().equals(userIdToFollow))
+                throw new BadRequestException("The user already follow to this customer.");
+        }
+
+        userRepository.addFollowed(customer, seller);
+
+        ResponseDTO followDTO = new ResponseDTO("The user with id " + userId + " is follow  to " + userIdToFollow);
+        return followDTO;
     }
 }

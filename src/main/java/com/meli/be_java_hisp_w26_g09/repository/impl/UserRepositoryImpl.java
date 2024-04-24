@@ -55,4 +55,10 @@ public class UserRepositoryImpl implements IUserRepository {
         }
 
     }
+
+    @Override
+    public void addFollowed(User customer, User seller) {
+        customer.getFollowed().add(seller);
+    }
+
 }
