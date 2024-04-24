@@ -13,16 +13,6 @@ public class ProductController {
     @Autowired
     IProductService productService;
 
-    @GetMapping
-    public ResponseEntity<?> getAllProducts() {
-        return productService.searchAllProducts();
-    }
-
-    @GetMapping("/posts")
-    public ResponseEntity<?> getAllPosts() {
-        return productService.searchAllPosts();
-    }
-
     @PostMapping("/post")
     public ResponseEntity<?> postCreatePost(@RequestBody PostDTO post){
         return productService.addPost(post);
