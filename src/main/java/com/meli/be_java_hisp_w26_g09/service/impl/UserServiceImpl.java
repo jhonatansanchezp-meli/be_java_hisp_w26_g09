@@ -82,5 +82,33 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userDTO;
+    public List<UserDTO> getAllUsers() {
+        return userRepository.getAllUsers().stream()
+                .map(user -> userMapper.userToUserDTO(user))
+                .toList();
+    }
+
+    @Override
+    public String unfollowUser(int userId, int userIdToUnfollow) {
+        Optional<User> userWhoUnfollowOptional = userRepository.findById(userId);
+
+        if(userWhoUnfollowOptional.isPresent()){
+            User userWhoUnfollow = userWhoUnfollowOptional.get();
+            List<User> followedUsers = userWhoUnfollow.getFollowed();
+
+            Optional<User> userToUnfollowOptional = followedUsers.stream()
+                    .filter(user -> user.getUserId() == userIdToUnfollow)
+                    .findFirst();
+
+            if(userToUnfollowOptional.isPresent()){
+                User userToUnfollow = userToUnfollowOptional.get();
+                userRepository.unfollowUser(userWhoUnfollow, userToUnfollow);
+                return "User " + userToUnfollow.getUserName() + " unfollowed";
+            }else{
+                throw new NotFoundException("User not found in followers list");
+            }
+        }else{
+            throw new NotFoundException("User not found");
+        }
     }
 }
