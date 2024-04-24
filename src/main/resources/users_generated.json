@@ -1,102 +1,47 @@
 [
   {
     "userId": 1,
-    "userName": "JohnDoe",
-    "seller": true
+    "userName": "usuario1",
+    "role": "Seller",
+    "followed": []
   },
   {
     "userId": 2,
-    "userName": "AliceSmith",
-    "seller": false
+    "userName": "usuario2",
+    "role": "Customer",
+    "followed": [
+      {
+        "userId": 1,
+        "userName": "usuario1",
+        "role": "Seller",
+        "followed": []
+      }
+    ]
   },
   {
     "userId": 3,
-    "userName": "BobJohnson",
-    "seller": true
-  },
-  {
-    "userId": 4,
-    "userName": "EmilyBrown",
-    "seller": false
-  },
-  {
-    "userId": 5,
-    "userName": "MichaelDavis",
-    "seller": true
-  },
-  {
-    "userId": 6,
-    "userName": "JessicaWilson",
-    "seller": false
-  },
-  {
-    "userId": 7,
-    "userName": "DavidMartinez",
-    "seller": true
-  },
-  {
-    "userId": 8,
-    "userName": "SarahAnderson",
-    "seller": false
-  },
-  {
-    "userId": 9,
-    "userName": "ChristopherTaylor",
-    "seller": true
-  },
-  {
-    "userId": 10,
-    "userName": "AmandaThomas",
-    "seller": false
-  },
-  {
-    "userId": 11,
-    "userName": "JamesLee",
-    "seller": true
-  },
-  {
-    "userId": 12,
-    "userName": "JenniferGarcia",
-    "seller": false
-  },
-  {
-    "userId": 13,
-    "userName": "MatthewRodriguez",
-    "seller": true
-  },
-  {
-    "userId": 14,
-    "userName": "MeganLopez",
-    "seller": false
-  },
-  {
-    "userId": 15,
-    "userName": "DanielPerez",
-    "seller": true
-  },
-  {
-    "userId": 16,
-    "userName": "LaurenHernandez",
-    "seller": false
-  },
-  {
-    "userId": 17,
-    "userName": "RyanGonzalez",
-    "seller": true
-  },
-  {
-    "userId": 18,
-    "userName": "AshleyYoung",
-    "seller": false
-  },
-  {
-    "userId": 19,
-    "userName": "BrandonMoore",
-    "seller": true
-  },
-  {
-    "userId": 20,
-    "userName": "OliviaKing",
-    "seller": false
+    "userName": "usuario3",
+    "role": "Customer",
+    "followed": [
+      {
+        "userId": 1,
+        "userName": "usuario1",
+        "role": "Seller",
+        "followed": []
+      },
+      {
+        "userId": 2,
+        "userName": "usuario2",
+        "role": "Customer",
+        "followed": [
+          {
+            "userId": 1,
+            "userName": "usuario1",
+            "role": "Seller",
+            "followed": []
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -31,4 +31,9 @@ public class UserRepositoryImpl implements IUserRepository {
         users= objectMapper.readValue(file,new TypeReference<List<User>>(){});
         listOfUser = users;
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        return listOfUser;
+    }
 }

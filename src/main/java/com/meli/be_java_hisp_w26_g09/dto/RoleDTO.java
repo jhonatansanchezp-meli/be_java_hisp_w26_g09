@@ -15,4 +15,15 @@ public class RoleDTO {
 
     private Integer idRole;
     private String nameRole;
+
+    public RoleDTO(String nameRole) {
+        this.nameRole = nameRole;
+        if (nameRole.equalsIgnoreCase("Seller")) {
+            this.idRole = 1;
+        } else if (nameRole.equalsIgnoreCase("Customer")) {
+            this.idRole = 2;
+        } else {
+            throw new IllegalArgumentException("Invalid role name: " + nameRole);
+        }
+    }
 }
