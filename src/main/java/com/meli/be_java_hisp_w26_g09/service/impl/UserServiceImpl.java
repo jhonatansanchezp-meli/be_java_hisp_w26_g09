@@ -3,6 +3,7 @@ package com.meli.be_java_hisp_w26_g09.service.impl;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
+import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
 import com.meli.be_java_hisp_w26_g09.exception.NotContentFollowedException;
 import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
 import com.meli.be_java_hisp_w26_g09.util.mapper.UserMapper;
@@ -12,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -57,4 +60,27 @@ public class UserServiceImpl implements IUserService {
         return userMapper.userFollowersToUserDTO(userFollowers.get());
     }
 
+    
+    public UserDTO getFollowedByIdOrdered(Integer id, String order)  {
+        UserDTO userDTO = getFollowedById(id);
+
+        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
+            throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
+        }
+
+
+        if ("name_asc".equalsIgnoreCase(order)) {
+            userDTO.setFollowed(userDTO.getFollowed()
+                    .stream()
+                    .sorted(Comparator.comparing(UserDTO::getUser_name))
+                    .collect(Collectors.toList()));
+        } else if ("name_desc".equalsIgnoreCase(order)) {
+            userDTO.setFollowed(userDTO.getFollowed()
+                    .stream()
+                    .sorted(Comparator.comparing(UserDTO::getUser_name).reversed())
+                    .collect(Collectors.toList()));
+        }
+
+        return userDTO;
+    }
 }
