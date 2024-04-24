@@ -1,5 +1,7 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
+import com.meli.be_java_hisp_w26_g09.dto.ExceptionDTO;
+import com.meli.be_java_hisp_w26_g09.dto.ResponseDTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
@@ -83,32 +85,28 @@ public class UserServiceImpl implements IUserService {
 
         return userDTO;
     public List<UserDTO> getAllUsers() {
-        return userRepository.getAllUsers().stream()
+        return userRepository.findAll().stream()
                 .map(user -> userMapper.userToUserDTO(user))
                 .toList();
     }
 
     @Override
-    public String unfollowUser(int userId, int userIdToUnfollow) {
+    public ResponseDTO unfollowUser(int userId, int userIdToUnfollow) {
         Optional<User> userWhoUnfollowOptional = userRepository.findById(userId);
 
-        if(userWhoUnfollowOptional.isPresent()){
-            User userWhoUnfollow = userWhoUnfollowOptional.get();
-            List<User> followedUsers = userWhoUnfollow.getFollowed();
+        if(userWhoUnfollowOptional.isEmpty()) throw new NotFoundException("User not found");
 
-            Optional<User> userToUnfollowOptional = followedUsers.stream()
-                    .filter(user -> user.getUserId() == userIdToUnfollow)
-                    .findFirst();
+        User userWhoUnfollow = userWhoUnfollowOptional.get();
+        List<User> followedUsers = userWhoUnfollow.getFollowed();
 
-            if(userToUnfollowOptional.isPresent()){
-                User userToUnfollow = userToUnfollowOptional.get();
-                userRepository.unfollowUser(userWhoUnfollow, userToUnfollow);
-                return "User " + userToUnfollow.getUserName() + " unfollowed";
-            }else{
-                throw new NotFoundException("User not found in followers list");
-            }
-        }else{
-            throw new NotFoundException("User not found");
-        }
+        Optional<User> userToUnfollowOptional = followedUsers.stream()
+                .filter(user -> user.getUserId() == userIdToUnfollow)
+                .findFirst();
+
+        if(userToUnfollowOptional.isEmpty()) throw new NotFoundException("User not found in followers list");
+
+        User userToUnfollow = userToUnfollowOptional.get();
+        userRepository.unfollowUser(userWhoUnfollow, userToUnfollow);
+        return new ResponseDTO("Unfollow successfull");
     }
 }

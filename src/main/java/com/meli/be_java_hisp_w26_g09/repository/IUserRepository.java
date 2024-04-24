@@ -10,7 +10,7 @@ public interface IUserRepository {
     Optional<User> findById(Integer id);
     List<User> findAll();
 
-    List<User> getAllUsers();
+    List<User> findAll();
 
     void unfollowUser(User userWhoUnfollow, User userToUnfollow);
 

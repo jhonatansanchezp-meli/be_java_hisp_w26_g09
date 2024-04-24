@@ -21,7 +21,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getFollowedByIdOrdered(userId, order));
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
