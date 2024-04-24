@@ -32,7 +32,7 @@ public class PostRepositoryImpl implements IPostRepository {
     }
 
     @Override
-    public List<Post> findAll() {
-        return listOfPost;
+    public void createPost(Post post) {
+        listOfPost.add(post);
     }
 }
