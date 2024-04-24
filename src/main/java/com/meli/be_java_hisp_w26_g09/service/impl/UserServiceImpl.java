@@ -11,6 +11,7 @@ import com.meli.be_java_hisp_w26_g09.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,4 +36,25 @@ public class UserServiceImpl implements IUserService {
 
         return userMapper.userFollowedToUserDTO(userFollowed.get());
     }
+
+    @Override
+    public UserDTO getFollowersById(Integer id) {
+        Optional<User> userFollowers = userRepository.findById(id);
+        if (userFollowers.isEmpty())
+            throw new NotFoundException("No information was found about those followed.");
+
+        if(userFollowers.get().getRole() != null && userFollowers.get().getRole().getIdRole().equals(Role.ID_CUSTOMER))
+            throw new NotContentFollowedException("The customers don't have an option for followers");
+
+        List<User> users = userRepository.findAll();
+
+        List<User> followers = users.stream()
+                .filter(user -> user.getFollowed() != null && user.getFollowed().stream().map(User::getUserId).
+                        anyMatch(userId -> userId.equals(userFollowers.get().getUserId()))).toList();
+
+        userFollowers.get().setFollowed(followers);
+
+        return userMapper.userFollowersToUserDTO(userFollowers.get());
+    }
+
 }

@@ -2,9 +2,6 @@ package com.meli.be_java_hisp_w26_g09.repository.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
-import com.meli.be_java_hisp_w26_g09.entity.Post;
-import com.meli.be_java_hisp_w26_g09.entity.Product;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import com.meli.be_java_hisp_w26_g09.repository.IUserRepository;
 import org.springframework.stereotype.Repository;
@@ -42,6 +39,12 @@ public class UserRepositoryImpl implements IUserRepository {
 
         return listOfUser.stream().filter(user -> user.getUserId().equals(id))
                 .findFirst();
+    }
+
+
+    @Override
+    public List<User> findAll() {
+        return listOfUser;
     }
 
 }

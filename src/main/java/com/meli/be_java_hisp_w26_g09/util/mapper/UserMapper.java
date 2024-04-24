@@ -27,6 +27,7 @@ public class UserMapper {
     }
 
 
+
     public User userDTOToUser(UserDTO userDTO) {
 
         if (userDTO == null || userDTO.getUser_id() == null)
@@ -46,7 +47,6 @@ public class UserMapper {
         if (userDTOList == null || userDTOList.isEmpty())
             return new ArrayList<>();
 
-        ObjectMapper objectMapper = new ObjectMapper();
         return userDTOList.stream()
                 .map(this::userDTOToUser)
                 .toList();
@@ -56,7 +56,6 @@ public class UserMapper {
         if (userList == null || userList.isEmpty())
             return new ArrayList<>();
 
-        ObjectMapper objectMapper = new ObjectMapper();
         return userList.stream()
                 .map(this::userToUserDTO)
                 .toList();
@@ -66,13 +65,24 @@ public class UserMapper {
         if (user == null || user.getUserId() == null)
             return new UserDTO();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
         UserDTO userDTO = userToUserDTO(user);
         if (userDTO.getFollowed() != null)
             userDTO.getFollowed().forEach(userDTO1 -> userDTO1.setRole(null));
 
         return userDTO;
     }
+
+    public UserDTO userFollowersToUserDTO(User user) {
+        if (user == null || user.getUserId() == null)
+            return new UserDTO();
+
+        UserDTO userDTO = userToUserDTO(user);
+        userDTO.setFollowers(userDTO.getFollowed());
+        userDTO.setFollowed(null);
+        userDTO.getFollowers().forEach(userDto -> userDto.setFollowed(null));
+        return userDTO;
+    }
+
+
 
 }

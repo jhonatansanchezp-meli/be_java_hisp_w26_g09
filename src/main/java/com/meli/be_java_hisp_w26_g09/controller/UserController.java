@@ -19,6 +19,11 @@ public class UserController {
     public ResponseEntity<?> getFollowed(@PathVariable Integer userId){
         return ResponseEntity.ok(userService.getFollowedById(userId));
     }
+    @GetMapping("/{userId}/followers/list")
+    public ResponseEntity<?> getFollowers(@PathVariable Integer userId){
+        return ResponseEntity.ok(userService.getFollowersById(userId));
+    }
+
 
 
 }
