@@ -1,86 +1,110 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
-import com.meli.be_java_hisp_w26_g09.dto.PostDTO;
-import com.meli.be_java_hisp_w26_g09.dto.ProductDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meli.be_java_hisp_w26_g09.dto.*;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
-import com.meli.be_java_hisp_w26_g09.entity.Product;
+import com.meli.be_java_hisp_w26_g09.entity.Role;
+import com.meli.be_java_hisp_w26_g09.entity.User;
+import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
 import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
-<<<<<<< HEAD
-import com.meli.be_java_hisp_w26_g09.repository.IRepository;
-=======
 import com.meli.be_java_hisp_w26_g09.repository.IPostRepository;
 import com.meli.be_java_hisp_w26_g09.repository.IProductRepository;
->>>>>>> da7af95 (updated repository)
+import com.meli.be_java_hisp_w26_g09.repository.IUserRepository;
 import com.meli.be_java_hisp_w26_g09.service.IProductService;
+import com.meli.be_java_hisp_w26_g09.util.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProductServiceImpl implements IProductService {
     @Autowired
-<<<<<<< HEAD
-    IRepository repository;
-=======
     IProductRepository productRepository;
     @Autowired
     IPostRepository postRepository;
->>>>>>> da7af95 (updated repository)
+    @Autowired
+    IUserRepository userRepository;
+    @Autowired
+    PostMapper postMapper;
+
 
     @Override
-    public ResponseEntity<?> searchAllProducts() {
-        List<ProductDTO> result = new ArrayList<>();
-<<<<<<< HEAD
-        List<Product> products = repository.findAllProducts();
-=======
-        List<Product> products = productRepository.findAll();
->>>>>>> da7af95 (updated repository)
-        if(products.size()>0){
-            for(Product p: products){
-                result.add(new ProductDTO(p.getProductId(),
-                        p.getProductName(),
-                        p.getType(),
-                        p.getBrand(),
-                        p.getColor(),
-                        p.getNotes()));
-            }
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }else{
-            throw new NotFoundException("No existen productos");
-        }
+    public ResponseDTO addPost(PostDTO post) {
+        if (post.getPrice() < 0)
+            throw new BadRequestException("The price cannot be negative");
+
+        post.setHasPromo(false);
+        if (post.getDiscount() != null && post.getDiscount() != 0.0)
+            throw new BadRequestException("Cannot add a promo post on this end point");
+
+        post.setDiscount(0.0);
+
+        if (validate(post))
+            throw new BadRequestException("No field can be null");
+
+        Optional<User> user = userRepository.findById(post.getUserId());
+        if (user.isEmpty())
+            throw new BadRequestException("The user_id does not exist ");
+
+        if (user.get().getRole() == null || user.get().getRole().getIdRole().equals(Role.ID_CUSTOMER))
+            throw new BadRequestException("The customer can't create posts ");
+
+        Post postEntity = postMapper.postDTOtoPost(post);
+        if (!productRepository.isCreated(postEntity.getProduct()))
+            productRepository.createProduct(postEntity.getProduct());
+
+        postRepository.createPost(postEntity);
+        return new ResponseDTO("Post has been created");
     }
 
     @Override
-    public ResponseEntity<?> searchAllPosts() {
-        List<PostDTO> result = new ArrayList<>();
-<<<<<<< HEAD
-        List<Post> posts = repository.findAllPosts();
-=======
+    public ProductFollowedListDTO findFollowedPostsLastTwoWeeks(int userID) {
+        Optional<User> user = userRepository.findById(userID);
+        if (user.isEmpty()) throw new NotFoundException("The user was not found");
+        if (user.get().getFollowed() == null) throw new NotFoundException("The user don't follow no seller");
+        Calendar twoWeeksAgo = Calendar.getInstance();
+        twoWeeksAgo.add(Calendar.WEEK_OF_YEAR, -2);
         List<Post> posts = postRepository.findAll();
->>>>>>> da7af95 (updated repository)
-        if(posts.size()>0){
-            for(Post p: posts){
-                ProductDTO product = new ProductDTO(p.getProduct().getProductId(),
-                        p.getProduct().getProductName(),
-                        p.getProduct().getType(),
-                        p.getProduct().getBrand(),
-                        p.getProduct().getColor(),
-                        p.getProduct().getNotes());
-                result.add(new PostDTO(p.getUserId(),
-                        p.getDate(),
-                        product,
-                        p.getCategory(),
-                        p.getPrice(),
-                        p.getHas_promo(),
-                        p.getDiscount()));
-            }
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }else{
-            throw new NotFoundException("No existen posts");
+        List<Post> followedPosts = new ArrayList<>();
+        user.get().getFollowed().forEach(seller -> followedPosts.addAll(posts.stream()
+                .filter(post -> post.getUserId().equals(seller.getUserId()))
+                .toList()));
+
+        List<Post> followedPostsLastTwoWeeks = followedPosts.stream()
+                .filter(post -> post.getDate().after(twoWeeksAgo.getTime())).toList()
+                .stream().sorted(Comparator.comparing(Post::getDate).reversed()).toList();
+
+        ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
+        productFollowedListDTO.setUserId(user.get().getUserId());
+        productFollowedListDTO.setPosts(postMapper.postListToPostForListDTOS(followedPostsLastTwoWeeks));
+        return productFollowedListDTO;
+    }
+
+    @Override
+    public ProductFollowedListDTO findFollowedPostsLastTwoWeeksSorted(int userID, String order) {
+        ProductFollowedListDTO productFollowedListDTOSorted = findFollowedPostsLastTwoWeeks(userID);
+
+        if (!("date_asc".equalsIgnoreCase(order) || "date_desc".equalsIgnoreCase(order)))
+            throw new BadRequestException("Invalid order parameter. Valid values are 'date_asc' or 'date_desc'.");
+
+        if ("date_asc".equalsIgnoreCase(order)) {
+            productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
+                    .stream()
+                    .sorted(Comparator.comparing(PostForListDTO::getDate))
+                    .collect(Collectors.toList()));
         }
+        return productFollowedListDTOSorted;
+    }
+
+
+    private boolean validate(PostDTO post) {
+        return Stream.of(post.getUserId(),
+                post.getDate(),
+                post.getProduct(),
+                post.getCategory(),
+                post.getPrice()).anyMatch(Objects::isNull);
     }
 }

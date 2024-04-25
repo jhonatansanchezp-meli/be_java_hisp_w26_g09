@@ -1,12 +1,11 @@
 package com.meli.be_java_hisp_w26_g09.service;
 
-import com.meli.be_java_hisp_w26_g09.dto.ProductDTO;
-import com.meli.be_java_hisp_w26_g09.entity.Post;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
+import com.meli.be_java_hisp_w26_g09.dto.PostDTO;
+import com.meli.be_java_hisp_w26_g09.dto.ResponseDTO;
+import com.meli.be_java_hisp_w26_g09.dto.ProductFollowedListDTO;
 
 public interface IProductService {
-    public ResponseEntity<?> searchAllProducts();
-    public ResponseEntity<?> searchAllPosts();
+    ResponseDTO addPost(PostDTO post);
+    ProductFollowedListDTO findFollowedPostsLastTwoWeeks(int userID);
+    ProductFollowedListDTO findFollowedPostsLastTwoWeeksSorted(int userID, String order);
 }
