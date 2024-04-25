@@ -19,7 +19,11 @@ public class ProductController {
     }
 
     @GetMapping("/followed/{userId}/list")
-    public ResponseEntity<?> getFollowedUsersPostsLastTwoWeeks(@PathVariable int userId){
-        return ResponseEntity.ok(productService.findFollowedPostsLastTwoWeeks(userId));
+    public ResponseEntity<?> getFollowedUsersPostsLastTwoWeeks(@PathVariable Integer userId,
+                                             @RequestParam(required = false) String order) {
+        if (order == null || order.isEmpty())
+            return ResponseEntity.ok(productService.findFollowedPostsLastTwoWeeks(userId));
+
+        return ResponseEntity.ok(productService.findFollowedPostsLastTwoWeeksSorted(userId,order));
     }
 }
