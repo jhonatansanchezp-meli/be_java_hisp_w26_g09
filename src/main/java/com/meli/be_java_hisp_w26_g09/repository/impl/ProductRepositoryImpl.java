@@ -2,9 +2,7 @@ package com.meli.be_java_hisp_w26_g09.repository.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.entity.Product;
-import com.meli.be_java_hisp_w26_g09.entity.User;
 import com.meli.be_java_hisp_w26_g09.repository.IProductRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ResourceUtils;
@@ -28,7 +26,7 @@ public class ProductRepositoryImpl implements IProductRepository {
         List<Product> products;
 
         file = ResourceUtils.getFile("classpath:products_generated.json");
-        products = objectMapper.readValue(file, new TypeReference<List<Product>>() {
+        products = objectMapper.readValue(file, new TypeReference<>() {
         });
         listOfProduct = products;
     }

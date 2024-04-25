@@ -32,13 +32,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ResponseDTO addPost(PostDTO post) {
-        if (post.getPrice() < 0) {
+        if (post.getPrice() < 0)
             throw new BadRequestException("The price cannot be negative");
-        }
+
         post.setHasPromo(false);
-        if (post.getDiscount() != null && post.getDiscount() != 0.0) {
+        if (post.getDiscount() != null && post.getDiscount() != 0.0)
             throw new BadRequestException("Cannot add a promo post on this end point");
-        }
+
         post.setDiscount(0.0);
         if (Stream.of(post.getUserId(),
                 post.getDate(),
@@ -47,13 +47,13 @@ public class ProductServiceImpl implements IProductService {
                 post.getPrice()).anyMatch(Objects::isNull)) {
             throw new BadRequestException("No field can be null");
         }
-        if (userRepository.findById(post.getUserId()).isEmpty()) {
+        if (userRepository.findById(post.getUserId()).isEmpty())
             throw new BadRequestException("The user_id does not exist ");
-        }
+
         Post postEntity = postMapper.postDTOtoPost(post);
-        if (!productRepository.isCreated(postEntity.getProduct())) {
+        if (!productRepository.isCreated(postEntity.getProduct()))
             productRepository.createProduct(postEntity.getProduct());
-        }
+
         postRepository.createPost(postEntity);
         return new ResponseDTO("Post has been created");
     }
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements IProductService {
         Optional<User> user = userRepository.findById(userID);
         if (user.isEmpty()) throw new NotFoundException("The user was not found");
         List<User> followed = user.get().getFollowed();
-        if (followed == null) throw new NotFoundException("EL usuario no sigue a ningún vendedor");
+        if (followed == null) throw new NotFoundException("The user don't follow no seller");
 
 
         Calendar twoWeeksAgo = Calendar.getInstance();
@@ -73,7 +73,7 @@ public class ProductServiceImpl implements IProductService {
 
         List<Post> posts = postRepository.findAll();
         List<Post> followedPosts = new ArrayList<>();
-        followed.stream().forEach(seller -> followedPosts.addAll(posts.stream()
+        followed.forEach(seller -> followedPosts.addAll(posts.stream()
                 .filter(post -> post.getUserId().equals(seller.getUserId()))
                 .toList()));
 
@@ -83,7 +83,7 @@ public class ProductServiceImpl implements IProductService {
 
 
         List<PostForListDTO> postForListDTOS = new ArrayList<>();
-        followedPostsLastTwoWeeks.stream().forEach(post -> postForListDTOS.add(new PostForListDTO(post.getUserId(),
+        followedPostsLastTwoWeeks.forEach(post -> postForListDTOS.add(new PostForListDTO(post.getUserId(),
                 post.getId(),
                 post.getDate(),
                 mapper.convertValue(post.getProduct(), ProductDTO.class), post.getCategory(), post.getPrice())));
@@ -99,9 +99,9 @@ public class ProductServiceImpl implements IProductService {
     public ProductFollowedListDTO findFollowedPostsLastTwoWeeksSorted(int userID, String order){
         ProductFollowedListDTO productFollowedListDTOSorted = findFollowedPostsLastTwoWeeks(userID);
 
-        if (!("date_asc".equalsIgnoreCase(order) || "date_desc".equalsIgnoreCase(order)) || order == null) {
+        if (!("date_asc".equalsIgnoreCase(order) || "date_desc".equalsIgnoreCase(order)))
             throw new BadRequestException("Invalid order parameter. Valid values are 'date_asc' or 'date_desc'.");
-        }
+
         if ("date_asc".equalsIgnoreCase(order)) {
              productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
                     .stream()

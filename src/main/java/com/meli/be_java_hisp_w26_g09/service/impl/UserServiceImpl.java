@@ -72,7 +72,7 @@ public class UserServiceImpl implements IUserService {
 
     public UserDTO getFollowersByIdOrdered(Integer id, String order) {
         UserDTO userFollowerDTO = getFollowersById(id);
-        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
+        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order))) {
             throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
         }
         if ("name_asc".equalsIgnoreCase(order)) {
@@ -93,7 +93,7 @@ public class UserServiceImpl implements IUserService {
     public UserDTO getFollowedByIdOrdered(Integer id, String order) {
         UserDTO userDTO = getFollowedById(id);
 
-        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
+        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order))) {
             throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
         }
         if ("name_asc".equalsIgnoreCase(order)) {
@@ -139,19 +139,17 @@ public class UserServiceImpl implements IUserService {
     public ResponseDTO follow(Integer userId, Integer userIdToFollow) {
         Optional<User> userOptional = userRepository.findById(userId);
 
-        if (!userOptional.isPresent())
+        if (userOptional.isEmpty())
             throw new NotFoundException("The user with id " + userId + " was not found.");
 
         User customer = userOptional.get();
 
         userOptional = userRepository.findById(userIdToFollow);
 
-        if (!userOptional.isPresent())
+        if (userOptional.isEmpty())
             throw new NotFoundException("The user with id " + userIdToFollow + " was not found.");
 
         User seller = userOptional.get();
-
-        customer.getRole().getIdRole().equals(Role.ID_CUSTOMER);
 
         if (!customer.getRole().getIdRole().equals(Role.ID_CUSTOMER) || !seller.getRole().getIdRole().equals(Role.ID_SELLER))
             throw new BadRequestException("Some submitted user does not comply with the role restrictions.");
@@ -163,7 +161,6 @@ public class UserServiceImpl implements IUserService {
 
         userRepository.addFollowed(customer, seller);
 
-        ResponseDTO followDTO = new ResponseDTO("The user with id " + userId + " is follow  to " + userIdToFollow);
-        return followDTO;
+        return new ResponseDTO("The user with id " + userId + " is follow  to " + userIdToFollow);
     }
 }
