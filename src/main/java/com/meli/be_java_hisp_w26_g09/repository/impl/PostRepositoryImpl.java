@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.repository.IPostRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ResourceUtils;
 
@@ -37,5 +36,10 @@ public class PostRepositoryImpl implements IPostRepository {
         contador++;
         post.setId(contador);
         listOfPost.add(post);
+    }
+
+    @Override
+    public List<Post> findAll() {
+        return listOfPost;
     }
 }
