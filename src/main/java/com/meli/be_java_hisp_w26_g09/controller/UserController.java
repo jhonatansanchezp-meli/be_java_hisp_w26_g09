@@ -39,7 +39,8 @@ public class UserController {
 
     @PostMapping("/{userId}/follow/{userIdToFollow}")
     public ResponseEntity<?> postFollow(@PathVariable Integer userId, @PathVariable Integer userIdToFollow) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.follow(userId, userIdToFollow));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.follow(userId, userIdToFollow));
     }
 
     @PostMapping("/{userId}/unfollow/{userIdToUnfollow}")
@@ -49,6 +50,7 @@ public class UserController {
 
     @GetMapping("/{userId}/followers/count")
     public ResponseEntity<?> getFollowedCount(@PathVariable Integer userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getFollowedCount(userId));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(userService.getFollowedCount(userId));
     }
 }
