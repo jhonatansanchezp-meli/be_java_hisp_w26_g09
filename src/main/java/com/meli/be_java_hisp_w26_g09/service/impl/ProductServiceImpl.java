@@ -3,6 +3,7 @@ package com.meli.be_java_hisp_w26_g09.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meli.be_java_hisp_w26_g09.dto.*;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
+import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
 import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
@@ -40,15 +41,16 @@ public class ProductServiceImpl implements IProductService {
             throw new BadRequestException("Cannot add a promo post on this end point");
 
         post.setDiscount(0.0);
-        if (Stream.of(post.getUserId(),
-                post.getDate(),
-                post.getProduct(),
-                post.getCategory(),
-                post.getPrice()).anyMatch(Objects::isNull)) {
+
+        if (validate(post))
             throw new BadRequestException("No field can be null");
-        }
-        if (userRepository.findById(post.getUserId()).isEmpty())
+
+        Optional<User> user = userRepository.findById(post.getUserId());
+        if (user.isEmpty())
             throw new BadRequestException("The user_id does not exist ");
+
+        if (user.get().getRole() == null || user.get().getRole().getIdRole().equals(Role.ID_CUSTOMER))
+            throw new BadRequestException("The customer can't create posts ");
 
         Post postEntity = postMapper.postDTOtoPost(post);
         if (!productRepository.isCreated(postEntity.getProduct()))
@@ -60,20 +62,14 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductFollowedListDTO findFollowedPostsLastTwoWeeks(int userID) {
-        ObjectMapper mapper = new ObjectMapper();
         Optional<User> user = userRepository.findById(userID);
         if (user.isEmpty()) throw new NotFoundException("The user was not found");
-        List<User> followed = user.get().getFollowed();
-        if (followed == null) throw new NotFoundException("The user don't follow no seller");
-
-
+        if (user.get().getFollowed() == null) throw new NotFoundException("The user don't follow no seller");
         Calendar twoWeeksAgo = Calendar.getInstance();
         twoWeeksAgo.add(Calendar.WEEK_OF_YEAR, -2);
-
-
         List<Post> posts = postRepository.findAll();
         List<Post> followedPosts = new ArrayList<>();
-        followed.forEach(seller -> followedPosts.addAll(posts.stream()
+        user.get().getFollowed().forEach(seller -> followedPosts.addAll(posts.stream()
                 .filter(post -> post.getUserId().equals(seller.getUserId()))
                 .toList()));
 
@@ -81,33 +77,34 @@ public class ProductServiceImpl implements IProductService {
                 .filter(post -> post.getDate().after(twoWeeksAgo.getTime())).toList()
                 .stream().sorted(Comparator.comparing(Post::getDate).reversed()).toList();
 
-
-        List<PostForListDTO> postForListDTOS = new ArrayList<>();
-        followedPostsLastTwoWeeks.forEach(post -> postForListDTOS.add(new PostForListDTO(post.getUserId(),
-                post.getId(),
-                post.getDate(),
-                mapper.convertValue(post.getProduct(), ProductDTO.class), post.getCategory(), post.getPrice())));
         ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
-
         productFollowedListDTO.setUserId(user.get().getUserId());
-        productFollowedListDTO.setPosts(postForListDTOS);
-
-
+        productFollowedListDTO.setPosts(postMapper.postListToPostForListDTOS(followedPostsLastTwoWeeks));
         return productFollowedListDTO;
     }
+
     @Override
-    public ProductFollowedListDTO findFollowedPostsLastTwoWeeksSorted(int userID, String order){
+    public ProductFollowedListDTO findFollowedPostsLastTwoWeeksSorted(int userID, String order) {
         ProductFollowedListDTO productFollowedListDTOSorted = findFollowedPostsLastTwoWeeks(userID);
 
         if (!("date_asc".equalsIgnoreCase(order) || "date_desc".equalsIgnoreCase(order)))
             throw new BadRequestException("Invalid order parameter. Valid values are 'date_asc' or 'date_desc'.");
 
         if ("date_asc".equalsIgnoreCase(order)) {
-             productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
+            productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
                     .stream()
                     .sorted(Comparator.comparing(PostForListDTO::getDate))
                     .collect(Collectors.toList()));
         }
         return productFollowedListDTOSorted;
+    }
+
+
+    private boolean validate(PostDTO post) {
+        return Stream.of(post.getUserId(),
+                post.getDate(),
+                post.getProduct(),
+                post.getCategory(),
+                post.getPrice()).anyMatch(Objects::isNull);
     }
 }

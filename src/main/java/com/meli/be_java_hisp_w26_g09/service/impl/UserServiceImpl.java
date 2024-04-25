@@ -119,20 +119,16 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseDTO unfollowUser(int userId, int userIdToUnfollow) {
         Optional<User> userWhoUnfollowOptional = userRepository.findById(userId);
-
         if (userWhoUnfollowOptional.isEmpty()) throw new NotFoundException("User not found");
-
-        User userWhoUnfollow = userWhoUnfollowOptional.get();
-        List<User> followedUsers = userWhoUnfollow.getFollowed();
-
-        Optional<User> userToUnfollowOptional = followedUsers.stream()
+        if (userWhoUnfollowOptional.get().getRole() == null || userWhoUnfollowOptional.get().getRole().getIdRole().equals(Role.ID_SELLER))
+            throw new BadRequestException("The seller can't unfollow to a seller");
+        if(userWhoUnfollowOptional.get().getFollowed() == null || userWhoUnfollowOptional.get().getFollowed().isEmpty())
+            throw new BadRequestException("The user does not have any followers");
+        Optional<User> userToUnfollowOptional = userWhoUnfollowOptional.get().getFollowed().stream()
                 .filter(user -> user.getUserId() == userIdToUnfollow)
                 .findFirst();
-
         if (userToUnfollowOptional.isEmpty()) throw new NotFoundException("User not found in followers list");
-
-        User userToUnfollow = userToUnfollowOptional.get();
-        userRepository.unfollowUser(userWhoUnfollow, userToUnfollow);
+        userRepository.unfollowUser(userWhoUnfollowOptional.get(), userToUnfollowOptional.get());
         return new ResponseDTO("Unfollow successfull");
     }
 
