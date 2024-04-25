@@ -7,19 +7,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostMapper {
-    public Post postDTOtoPost(PostDTO post){
+    public Post postDTOtoPost(PostDTO post) {
         Product product = new Product(post.getProduct().getProductId(),
                 post.getProduct().getProductName(),
                 post.getProduct().getType(),
                 post.getProduct().getBrand(),
                 post.getProduct().getColor(),
                 post.getProduct().getNotes());
-        Post postEntity = new Post(0,post.getUserId(),
-                post.getDate() ,
+        Post postEntity = new Post(0, post.getUserId(),
+                post.getDate(),
                 product,
                 post.getCategory(),
                 post.getPrice(),
-                post.getHas_promo(),
+                post.getHasPromo(),
                 post.getDiscount());
         return postEntity;
     }

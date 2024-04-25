@@ -24,10 +24,11 @@ public class PostRepositoryImpl implements IPostRepository {
     private void loadDataBase() throws IOException {
         File file;
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Post> posts ;
+        List<Post> posts;
 
-        file= ResourceUtils.getFile("classpath:posts_generated.json");
-        posts= objectMapper.readValue(file,new TypeReference<List<Post>>(){});
+        file = ResourceUtils.getFile("classpath:posts_generated.json");
+        posts = objectMapper.readValue(file, new TypeReference<List<Post>>() {
+        });
         listOfPost = posts;
     }
 

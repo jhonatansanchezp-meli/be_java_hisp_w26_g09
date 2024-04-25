@@ -17,8 +17,8 @@ public class UserMapper {
             return new UserDTO();
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setUser_id(user.getUserId());
-        userDTO.setUser_name(user.getUserName());
+        userDTO.setUserId(user.getUserId());
+        userDTO.setUserName(user.getUserName());
         userDTO.setFollowed(
                 (user.getFollowed() != null
                         && user.getFollowed().isEmpty()) ? null :
@@ -30,12 +30,12 @@ public class UserMapper {
 
     public User userDTOToUser(UserDTO userDTO) {
 
-        if (userDTO == null || userDTO.getUser_id() == null)
+        if (userDTO == null || userDTO.getUserId() == null)
             return new User();
 
         User user = new User();
-        user.setUserId(userDTO.getUser_id());
-        user.setUserName(userDTO.getUser_name());
+        user.setUserId(userDTO.getUserId());
+        user.setUserName(userDTO.getUserName());
         user.setFollowed(user.getFollowed() != null
                 && (userDTO.getFollowed().isEmpty()) ? null :
                         userDTOListToUserList(userDTO.getFollowed()));

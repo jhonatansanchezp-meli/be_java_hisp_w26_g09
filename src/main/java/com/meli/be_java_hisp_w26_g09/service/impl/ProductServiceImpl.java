@@ -35,7 +35,7 @@ public class ProductServiceImpl implements IProductService {
         if (post.getPrice() < 0) {
             throw new BadRequestException("The price cannot be negative");
         }
-        post.setHas_promo(false);
+        post.setHasPromo(false);
         if (post.getDiscount() != null && post.getDiscount() != 0.0) {
             throw new BadRequestException("Cannot add a promo post on this end point");
         }
@@ -89,7 +89,7 @@ public class ProductServiceImpl implements IProductService {
                 mapper.convertValue(post.getProduct(), ProductDTO.class), post.getCategory(), post.getPrice())));
         ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
 
-        productFollowedListDTO.setUser_id(user.get().getUserId());
+        productFollowedListDTO.setUserId(user.get().getUserId());
         productFollowedListDTO.setPosts(postForListDTOS);
 
 

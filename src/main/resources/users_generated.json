@@ -1,321 +1,321 @@
 [
   {
-    "userId": 1,
-    "userName": "JohnDoe",
+    "user_id": 1,
+    "user_name": "JohnDoe",
     "role": {
-     "idRole" : 1,
-      "nameRole" : "Customer"
+     "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [{
-      "userId": 2,
-      "userName": "AliceSmith",
+      "user_id": 2,
+      "user_name": "AliceSmith",
       "role": {
-        "idRole" : 2,
-        "nameRole" : "Seller"
+        "id_role" : 2,
+        "name_role" : "Seller"
       }},
       {
-        "userId": 4,
-        "userName": "EmilyBrown",
+        "user_id": 4,
+        "user_name": "EmilyBrown",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }
       ]
   },
   {
-    "userId": 2,
-    "userName": "AliceSmith",
+    "user_id": 2,
+    "user_name": "AliceSmith",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 3,
-    "userName": "BobJohnson",
+    "user_id": 3,
+    "user_name": "BobJohnson",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [
       {
-        "userId": 4,
-        "userName": "EmilyBrown",
+        "user_id": 4,
+        "user_name": "EmilyBrown",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }
     ]
   },
   {
-    "userId": 4,
-    "userName": "EmilyBrown",
+    "user_id": 4,
+    "user_name": "EmilyBrown",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 5,
-    "userName": "MichaelDavis",
+    "user_id": 5,
+    "user_name": "MichaelDavis",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 6,
-    "userName": "JessicaWilson",
+    "user_id": 6,
+    "user_name": "JessicaWilson",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [{
-      "userId": 2,
-      "userName": "AliceSmith",
+      "user_id": 2,
+      "user_name": "AliceSmith",
       "role": {
-        "idRole" : 2,
-        "nameRole" : "Seller"
+        "id_role" : 2,
+        "name_role" : "Seller"
       }},
       {
-        "userId": 4,
-        "userName": "EmilyBrown",
+        "user_id": 4,
+        "user_name": "EmilyBrown",
         "role": {
-          "idRole": 2,
-          "nameRole": "Seller"
+          "id_role": 2,
+          "name_role": "Seller"
         }
       },
       {
-        "userId": 5,
-        "userName": "MichaelDavis",
+        "user_id": 5,
+        "user_name": "MichaelDavis",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }
     ]
   },
   {
-    "userId": 7,
-    "userName": "DavidMartinez",
+    "user_id": 7,
+    "user_name": "DavidMartinez",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 8,
-    "userName": "SarahAnderson",
+    "user_id": 8,
+    "user_name": "SarahAnderson",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 9,
-    "userName": "ChristopherTaylor",
+    "user_id": 9,
+    "user_name": "ChristopherTaylor",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 10,
-    "userName": "AmandaThomas",
+    "user_id": 10,
+    "user_name": "AmandaThomas",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [
       {
-        "userId": 9,
-        "userName": "ChristopherTaylor",
+        "user_id": 9,
+        "user_name": "ChristopherTaylor",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       },
       {
-        "userId": 8,
-        "userName": "SarahAnderson",
+        "user_id": 8,
+        "user_name": "SarahAnderson",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }
 
     ]
   },
   {
-    "userId": 11,
-    "userName": "JamesLee",
+    "user_id": 11,
+    "user_name": "JamesLee",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 12,
-    "userName": "JenniferGarcia",
+    "user_id": 12,
+    "user_name": "JenniferGarcia",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [
       {
-        "userId": 11,
-        "userName": "JamesLee",
+        "user_id": 11,
+        "user_name": "JamesLee",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       },
       {
-        "userId": 13,
-        "userName": "MatthewRodriguez",
+        "user_id": 13,
+        "user_name": "MatthewRodriguez",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }
     ]
   },
   {
-    "userId": 13,
-    "userName": "MatthewRodriguez",
+    "user_id": 13,
+    "user_name": "MatthewRodriguez",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 14,
-    "userName": "MeganLopez",
+    "user_id": 14,
+    "user_name": "MeganLopez",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [
-      {"userId": 15,
-        "userName": "DanielPerez",
+      {"user_id": 15,
+        "user_name": "DanielPerez",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       },
       {
-        "userId": 17,
-        "userName": "RyanGonzalez",
+        "user_id": 17,
+        "user_name": "RyanGonzalez",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }
     ]
   },
   {
-    "userId": 15,
-    "userName": "DanielPerez",
+    "user_id": 15,
+    "user_name": "DanielPerez",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 16,
-    "userName": "LaurenHernandez",
+    "user_id": 16,
+    "user_name": "LaurenHernandez",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [{
-      "userId": 17,
-      "userName": "RyanGonzalez",
+      "user_id": 17,
+      "user_name": "RyanGonzalez",
       "role": {
-        "idRole" : 2,
-        "nameRole" : "Seller"
+        "id_role" : 2,
+        "name_role" : "Seller"
       }
     },
       {
-        "userId": 19,
-        "userName": "BrandonMoore",
+        "user_id": 19,
+        "user_name": "BrandonMoore",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }
     ]
   },
   {
-    "userId": 17,
-    "userName": "RyanGonzalez",
+    "user_id": 17,
+    "user_name": "RyanGonzalez",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 18,
-    "userName": "AshleyYoung",
+    "user_id": 18,
+    "user_name": "AshleyYoung",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [{
-      "userId": 19,
-      "userName": "BrandonMoore",
+      "user_id": 19,
+      "user_name": "BrandonMoore",
       "role": {
-        "idRole" : 2,
-        "nameRole" : "Seller"
+        "id_role" : 2,
+        "name_role" : "Seller"
       }
     },
       {
-        "userId": 17,
-        "userName": "RyanGonzalez",
+        "user_id": 17,
+        "user_name": "RyanGonzalez",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }]
   },
   {
-    "userId": 19,
-    "userName": "BrandonMoore",
+    "user_id": 19,
+    "user_name": "BrandonMoore",
     "role": {
-      "idRole" : 2,
-      "nameRole" : "Seller"
+      "id_role" : 2,
+      "name_role" : "Seller"
     }
   },
   {
-    "userId": 20,
-    "userName": "OliviaKing",
+    "user_id": 20,
+    "user_name": "OliviaKing",
     "role": {
-      "idRole" : 1,
-      "nameRole" : "Customer"
+      "id_role" : 1,
+      "name_role" : "Customer"
     },
     "followed" : [{
-      "userId": 17,
-      "userName": "RyanGonzalez",
+      "user_id": 17,
+      "user_name": "RyanGonzalez",
       "role": {
-        "idRole" : 2,
-        "nameRole" : "Seller"
+        "id_role" : 2,
+        "name_role" : "Seller"
       }
     },
       {
-        "userId": 2,
-        "userName": "AliceSmith",
+        "user_id": 2,
+        "user_name": "AliceSmith",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }},
       {
-        "userId": 4,
-        "userName": "EmilyBrown",
+        "user_id": 4,
+        "user_name": "EmilyBrown",
         "role": {
-          "idRole" : 2,
-          "nameRole" : "Seller"
+          "id_role" : 2,
+          "name_role" : "Seller"
         }
       }]
   }
