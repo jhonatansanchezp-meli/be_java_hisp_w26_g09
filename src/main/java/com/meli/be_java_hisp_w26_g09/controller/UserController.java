@@ -51,5 +51,4 @@ public class UserController {
     public ResponseEntity<?> getFollowedCount(@PathVariable Integer userId){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getFollowedCount(userId));
     }
-
 }
