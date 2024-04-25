@@ -60,7 +60,7 @@ To use the Postman collection, follow these steps:
 
 - [@Jhonatan Sánchez](https://github.com/jhonatansanchezp-meli)
 - [@Joan Andrés Gómez](https://github.com/jgomezreyes)
-- [@Fabián Trujillo](https://github.com/fabian001254)
+- [@Fabian Trujillo](https://github.com/fabian001254)
 - [@Edwin Steven Guayacan](https://github.com/EdwinGuayacan)
 - [@Mario Iván Lozano](https://github.com/ivanlozanoq)
 - [@Geraldine Gómez](https://github.com/ggomezr1403)
