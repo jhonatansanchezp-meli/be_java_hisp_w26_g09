@@ -9,7 +9,8 @@ public interface IUserService {
 
     UserDTO getFollowedById(Integer id);
     UserDTO getFollowersById(Integer id);
-    public UserDTO getFollowedByIdOrdered(Integer id, String order);
+    UserDTO getFollowedByIdOrdered(Integer id, String order);
+    UserDTO getFollowersByIdOrdered(Integer id, String order);
 
     List<UserDTO> getAllUsers();
 

@@ -69,14 +69,33 @@ public class UserServiceImpl implements IUserService {
         return user;
     }
     
-    public UserDTO getFollowedByIdOrdered(Integer id, String order) {
+    
+    public UserDTO getFollowersByIdOrdered(Integer id, String order){
+         UserDTO userFollowerDTO = getFollowersById(id);
+        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
+            throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
+        }
+        if ("name_asc".equalsIgnoreCase(order)) {
+            userFollowerDTO.setFollowers(userFollowerDTO.getFollowers()
+                    .stream()
+                    .sorted(Comparator.comparing(UserDTO::getUser_name))
+                    .collect(Collectors.toList()));
+        } else if ("name_desc".equalsIgnoreCase(order)) {
+            userFollowerDTO.setFollowers(userFollowerDTO.getFollowers()
+                    .stream()
+                    .sorted(Comparator.comparing(UserDTO::getUser_name).reversed())
+                    .collect(Collectors.toList()));
+        }
+        return userFollowerDTO;
+    }
+
+    @Override
+    public UserDTO getFollowedByIdOrdered(Integer id, String order)  {
         UserDTO userDTO = getFollowedById(id);
 
         if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
             throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
         }
-
-
         if ("name_asc".equalsIgnoreCase(order)) {
             userDTO.setFollowed(userDTO.getFollowed()
                     .stream()
@@ -88,7 +107,6 @@ public class UserServiceImpl implements IUserService {
                     .sorted(Comparator.comparing(UserDTO::getUser_name).reversed())
                     .collect(Collectors.toList()));
         }
-
         return userDTO;
     }
 
