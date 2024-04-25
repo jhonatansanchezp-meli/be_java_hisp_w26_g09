@@ -10,15 +10,19 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
     List<Post> listOfPost = new ArrayList<>();
-    Integer contador = 20;
+    Integer counter;
 
     public PostRepositoryImpl() throws IOException {
         loadDataBase();
+        counter = Objects.requireNonNull(listOfPost.stream()
+                        .max(Comparator.comparing(Post::getId)).orElse(null)).getId();
     }
 
     private void loadDataBase() throws IOException {
@@ -27,15 +31,15 @@ public class PostRepositoryImpl implements IPostRepository {
         List<Post> posts;
 
         file = ResourceUtils.getFile("classpath:posts_generated.json");
-        posts = objectMapper.readValue(file, new TypeReference<List<Post>>() {
+        posts = objectMapper.readValue(file, new TypeReference<>() {
         });
         listOfPost = posts;
     }
 
     @Override
     public void createPost(Post post) {
-        contador++;
-        post.setId(contador);
+        counter++;
+        post.setId(counter);
         listOfPost.add(post);
     }
 

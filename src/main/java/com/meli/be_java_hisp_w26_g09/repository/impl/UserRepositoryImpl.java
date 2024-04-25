@@ -27,7 +27,7 @@ public class UserRepositoryImpl implements IUserRepository {
         List<User> users;
 
         file = ResourceUtils.getFile("classpath:users_generated.json");
-        users = objectMapper.readValue(file, new TypeReference<List<User>>() {
+        users = objectMapper.readValue(file, new TypeReference<>() {
         });
         listOfUser = users;
     }
@@ -51,9 +51,9 @@ public class UserRepositoryImpl implements IUserRepository {
     public void unfollowUser(User userWhoUnfollow, User userToUnfollow) {
         int index = listOfUser.indexOf(userToUnfollow);
         userWhoUnfollow.getFollowed().remove(userToUnfollow);
-        if (index >= 0) {
+        if (index >= 0)
             listOfUser.set(index, userWhoUnfollow);
-        }
+
 
     }
 

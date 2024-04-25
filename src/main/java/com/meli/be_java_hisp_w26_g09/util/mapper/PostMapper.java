@@ -14,13 +14,12 @@ public class PostMapper {
                 post.getProduct().getBrand(),
                 post.getProduct().getColor(),
                 post.getProduct().getNotes());
-        Post postEntity = new Post(0, post.getUserId(),
+        return new Post(0, post.getUserId(),
                 post.getDate(),
                 product,
                 post.getCategory(),
                 post.getPrice(),
                 post.getHasPromo(),
                 post.getDiscount());
-        return postEntity;
     }
 }

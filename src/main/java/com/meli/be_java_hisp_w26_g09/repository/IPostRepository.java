@@ -5,7 +5,7 @@ import com.meli.be_java_hisp_w26_g09.entity.Post;
 import java.util.List;
 
 public interface IPostRepository {
-    public void createPost(Post post);
+    void createPost(Post post);
 
-    public List<Post> findAll();
+    List<Post> findAll();
 }
