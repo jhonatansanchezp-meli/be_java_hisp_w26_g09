@@ -1,5 +1,6 @@
 package com.meli.be_java_hisp_w26_g09.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.meli.be_java_hisp_w26_g09.entity.Product;
 import lombok.*;
 
@@ -10,7 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PostDTO implements Serializable {
+    private Integer postId;
     private Integer userId;
     private Date date;
     private ProductDTO product;
