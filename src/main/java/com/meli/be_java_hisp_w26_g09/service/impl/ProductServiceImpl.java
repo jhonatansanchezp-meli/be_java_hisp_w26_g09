@@ -1,11 +1,7 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meli.be_java_hisp_w26_g09.dto.PostDTO;
-import com.meli.be_java_hisp_w26_g09.dto.PostForListDTO;
-import com.meli.be_java_hisp_w26_g09.dto.ProductDTO;
-import com.meli.be_java_hisp_w26_g09.dto.ResponseDTO;
-import com.meli.be_java_hisp_w26_g09.dto.ProductFollowedListDTO;
+import com.meli.be_java_hisp_w26_g09.dto.*;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
@@ -19,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -97,5 +94,20 @@ public class ProductServiceImpl implements IProductService {
 
 
         return productFollowedListDTO;
+    }
+    @Override
+    public ProductFollowedListDTO findFollowedPostsLastTwoWeeksSorted(int userID, String order){
+        ProductFollowedListDTO productFollowedListDTOSorted = findFollowedPostsLastTwoWeeks(userID);
+
+        if (!("date_asc".equalsIgnoreCase(order) || "date_desc".equalsIgnoreCase(order)) || order == null) {
+            throw new BadRequestException("Invalid order parameter. Valid values are 'date_asc' or 'date_desc'.");
+        }
+        if ("date_asc".equalsIgnoreCase(order)) {
+             productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
+                    .stream()
+                    .sorted(Comparator.comparing(PostForListDTO::getDate))
+                    .collect(Collectors.toList()));
+        }
+        return productFollowedListDTOSorted;
     }
 }
