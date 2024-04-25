@@ -8,7 +8,9 @@ import java.util.Optional;
 public interface IUserRepository {
 
     Optional<User> findById(Integer id);
+
     List<User> findAll();
+
     void unfollowUser(User userWhoUnfollow, User userToUnfollow);
 
     void addFollowed(User customer, User seller);

@@ -14,7 +14,7 @@ public class ProductController {
     IProductService productService;
 
     @PostMapping("/post")
-    public ResponseEntity<?> postCreatePost(@RequestBody PostDTO post){
+    public ResponseEntity<?> postCreatePost(@RequestBody PostDTO post) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.addPost(post));
     }
 

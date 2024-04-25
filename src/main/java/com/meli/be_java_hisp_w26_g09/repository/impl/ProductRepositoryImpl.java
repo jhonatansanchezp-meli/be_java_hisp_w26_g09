@@ -25,10 +25,11 @@ public class ProductRepositoryImpl implements IProductRepository {
     private void loadDataBase() throws IOException {
         File file;
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Product> products ;
+        List<Product> products;
 
-        file= ResourceUtils.getFile("classpath:products_generated.json");
-        products= objectMapper.readValue(file,new TypeReference<List<Product>>(){});
+        file = ResourceUtils.getFile("classpath:products_generated.json");
+        products = objectMapper.readValue(file, new TypeReference<List<Product>>() {
+        });
         listOfProduct = products;
     }
 

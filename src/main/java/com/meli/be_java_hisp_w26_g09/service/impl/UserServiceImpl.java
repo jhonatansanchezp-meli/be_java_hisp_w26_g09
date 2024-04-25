@@ -34,7 +34,7 @@ public class UserServiceImpl implements IUserService {
         if (userFollowed.isEmpty())
             throw new NotFoundException("No information was found about those followed.");
 
-        if(userFollowed.get().getRole() != null
+        if (userFollowed.get().getRole() != null
                 && userFollowed.get().getRole().getIdRole().equals(Role.ID_SELLER))
             throw new NotContentFollowedException("The seller does not have the option to follow");
 
@@ -47,7 +47,7 @@ public class UserServiceImpl implements IUserService {
         if (userFollowers.isEmpty())
             throw new NotFoundException("No information was found about those followed.");
 
-        if(userFollowers.get().getRole() != null && userFollowers.get().getRole().getIdRole().equals(Role.ID_CUSTOMER))
+        if (userFollowers.get().getRole() != null && userFollowers.get().getRole().getIdRole().equals(Role.ID_CUSTOMER))
             throw new NotContentFollowedException("The customers don't have an option for followers");
 
         List<User> users = userRepository.findAll();
@@ -64,33 +64,33 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO getFollowedCount(Integer id) {
         UserDTO user = getFollowersById(id);
-        user.setFollowers_count(user.getFollowers().size());
+        user.setFollowersCount(user.getFollowers().size());
         user.setFollowers(null);
         return user;
     }
-    
-    
-    public UserDTO getFollowersByIdOrdered(Integer id, String order){
-         UserDTO userFollowerDTO = getFollowersById(id);
+
+
+    public UserDTO getFollowersByIdOrdered(Integer id, String order) {
+        UserDTO userFollowerDTO = getFollowersById(id);
         if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
             throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
         }
         if ("name_asc".equalsIgnoreCase(order)) {
             userFollowerDTO.setFollowers(userFollowerDTO.getFollowers()
                     .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUser_name))
+                    .sorted(Comparator.comparing(UserDTO::getUserName))
                     .collect(Collectors.toList()));
         } else if ("name_desc".equalsIgnoreCase(order)) {
             userFollowerDTO.setFollowers(userFollowerDTO.getFollowers()
                     .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUser_name).reversed())
+                    .sorted(Comparator.comparing(UserDTO::getUserName).reversed())
                     .collect(Collectors.toList()));
         }
         return userFollowerDTO;
     }
 
     @Override
-    public UserDTO getFollowedByIdOrdered(Integer id, String order)  {
+    public UserDTO getFollowedByIdOrdered(Integer id, String order) {
         UserDTO userDTO = getFollowedById(id);
 
         if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order)) || order == null) {
@@ -99,12 +99,12 @@ public class UserServiceImpl implements IUserService {
         if ("name_asc".equalsIgnoreCase(order)) {
             userDTO.setFollowed(userDTO.getFollowed()
                     .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUser_name))
+                    .sorted(Comparator.comparing(UserDTO::getUserName))
                     .collect(Collectors.toList()));
         } else if ("name_desc".equalsIgnoreCase(order)) {
             userDTO.setFollowed(userDTO.getFollowed()
                     .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUser_name).reversed())
+                    .sorted(Comparator.comparing(UserDTO::getUserName).reversed())
                     .collect(Collectors.toList()));
         }
         return userDTO;
@@ -120,7 +120,7 @@ public class UserServiceImpl implements IUserService {
     public ResponseDTO unfollowUser(int userId, int userIdToUnfollow) {
         Optional<User> userWhoUnfollowOptional = userRepository.findById(userId);
 
-        if(userWhoUnfollowOptional.isEmpty()) throw new NotFoundException("User not found");
+        if (userWhoUnfollowOptional.isEmpty()) throw new NotFoundException("User not found");
 
         User userWhoUnfollow = userWhoUnfollowOptional.get();
         List<User> followedUsers = userWhoUnfollow.getFollowed();
@@ -129,19 +129,19 @@ public class UserServiceImpl implements IUserService {
                 .filter(user -> user.getUserId() == userIdToUnfollow)
                 .findFirst();
 
-        if(userToUnfollowOptional.isEmpty()) throw new NotFoundException("User not found in followers list");
+        if (userToUnfollowOptional.isEmpty()) throw new NotFoundException("User not found in followers list");
 
         User userToUnfollow = userToUnfollowOptional.get();
         userRepository.unfollowUser(userWhoUnfollow, userToUnfollow);
         return new ResponseDTO("Unfollow successfull");
     }
-    
+
     public ResponseDTO follow(Integer userId, Integer userIdToFollow) {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (!userOptional.isPresent())
             throw new NotFoundException("The user with id " + userId + " was not found.");
-        
+
         User customer = userOptional.get();
 
         userOptional = userRepository.findById(userIdToFollow);
@@ -150,12 +150,12 @@ public class UserServiceImpl implements IUserService {
             throw new NotFoundException("The user with id " + userIdToFollow + " was not found.");
 
         User seller = userOptional.get();
-        
+
         customer.getRole().getIdRole().equals(Role.ID_CUSTOMER);
 
         if (!customer.getRole().getIdRole().equals(Role.ID_CUSTOMER) || !seller.getRole().getIdRole().equals(Role.ID_SELLER))
             throw new BadRequestException("Some submitted user does not comply with the role restrictions.");
-        
+
         for (User userIterarion : customer.getFollowed()) {
             if (userIterarion.getUserId().equals(userIdToFollow))
                 throw new BadRequestException("The user already follow to this customer.");

@@ -8,8 +8,11 @@ import java.util.List;
 public interface IUserService {
 
     UserDTO getFollowedById(Integer id);
+
     UserDTO getFollowersById(Integer id);
+
     UserDTO getFollowedByIdOrdered(Integer id, String order);
+
     UserDTO getFollowersByIdOrdered(Integer id, String order);
 
     List<UserDTO> getAllUsers();
@@ -17,7 +20,7 @@ public interface IUserService {
     ResponseDTO unfollowUser(int userId, int userToUnfollow);
 
     ResponseDTO follow(Integer userId, Integer userIdToFollow);
-    
+
     UserDTO getFollowedCount(Integer id);
 
 }

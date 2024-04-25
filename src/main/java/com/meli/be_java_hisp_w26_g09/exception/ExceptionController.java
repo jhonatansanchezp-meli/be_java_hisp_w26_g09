@@ -23,7 +23,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<?> notSameTyping(MethodArgumentTypeMismatchException e){
+    public ResponseEntity<?> notSameTyping(MethodArgumentTypeMismatchException e) {
         return ResponseEntity.badRequest().body(new ExceptionDTO("Not same typing attribute"));
     }
 
