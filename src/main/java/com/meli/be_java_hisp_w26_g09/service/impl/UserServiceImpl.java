@@ -154,6 +154,6 @@ public class UserServiceImpl implements IUserService {
 
         userRepository.addFollowed(customer, seller);
 
-        return new ResponseDTO("The user with id " + userId + " is follow  to " + userIdToFollow);
+        return new ResponseDTO("The user with id " + userId + " is follow to " + userIdToFollow);
     }
 }
