@@ -2,6 +2,7 @@ package com.meli.be_java_hisp_w26_g09.repository.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.repository.IPostRepository;
 import org.springframework.stereotype.Repository;
