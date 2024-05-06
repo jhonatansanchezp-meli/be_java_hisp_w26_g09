@@ -31,16 +31,16 @@ public class PostDTO implements Serializable {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(pattern = "dd-MM-yyyy")
-    @NotNull(message = "Date can't be null")
+    @NotNull(message = "Date is required, can't be null")
     private LocalDate date;
 
     @Valid
     private ProductDTO product;
 
-    @NotNull(message = "Category can't be null")
+    @NotNull(message = "Category is required, can't be null")
     private Integer category;
 
-    @NotNull(message = "Price can't be null")
+    @NotNull(message = "Price is required, can't be null")
     @Max(value = 10000000, message = "Max price is $10.000.000")
     private Double price;
     @JsonProperty("has_promo")
