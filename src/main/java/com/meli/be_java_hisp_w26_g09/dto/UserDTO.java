@@ -28,7 +28,7 @@ public class UserDTO {
 
     @JsonProperty("user_id")
     @Positive(message = "ID must be greater than zero")
-    @NotNull(message = "ID can't be null")
+    @NotNull(message = "ID is required, can't be null")
     private Integer userId;
     @JsonProperty("user_name")
     @Size(max = 15, min = 1, message = "Username max length must be 15 characters")
