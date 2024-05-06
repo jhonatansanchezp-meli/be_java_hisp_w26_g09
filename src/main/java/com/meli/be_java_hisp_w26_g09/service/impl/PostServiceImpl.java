@@ -14,6 +14,7 @@ import com.meli.be_java_hisp_w26_g09.util.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,6 +35,9 @@ public class PostServiceImpl implements IPostService {
     public ResponseDTO addPost(PostDTO post) {
         if (post.getPrice() < 0)
             throw new BadRequestException("The price cannot be negative");
+
+        if (post.getCategory() <= 0)
+            throw new BadRequestException("The category is not valid");
 
         post.setHasPromo(false);
         if (post.getDiscount() != null && post.getDiscount() != 0.0)
@@ -64,17 +68,20 @@ public class PostServiceImpl implements IPostService {
         Optional<User> user = userRepository.findById(userID);
         if (user.isEmpty()) throw new NotFoundException("The user was not found");
         if (user.get().getFollowed() == null) throw new NotFoundException("The user don't follow no seller");
-        Calendar twoWeeksAgo = Calendar.getInstance();
-        twoWeeksAgo.add(Calendar.WEEK_OF_YEAR, -2);
         List<Post> posts = postRepository.findAll();
         List<Post> followedPosts = new ArrayList<>();
         user.get().getFollowed().forEach(seller -> followedPosts.addAll(posts.stream()
                 .filter(post -> post.getUserId().equals(seller.getUserId()))
                 .toList()));
 
+        LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
+        LocalDate now = LocalDate.now();
+
         List<Post> followedPostsLastTwoWeeks = followedPosts.stream()
-                .filter(post -> post.getDate().after(twoWeeksAgo.getTime())).toList()
-                .stream().sorted(Comparator.comparing(Post::getDate).reversed()).toList();
+                .filter(post -> (post.getDate().isAfter(twoWeeksAgo) || post.getDate().isEqual(twoWeeksAgo))
+                        && (post.getDate().isBefore(now) || post.getDate().isEqual(now)))
+                .sorted(Comparator.comparing(Post::getDate).reversed())
+                .collect(Collectors.toList());
 
         ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
         productFollowedListDTO.setUserId(user.get().getUserId());
