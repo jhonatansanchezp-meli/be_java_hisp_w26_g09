@@ -3,10 +3,13 @@ package com.meli.be_java_hisp_w26_g09.exception;
 import com.meli.be_java_hisp_w26_g09.dto.ExceptionDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.List;
 
 @ControllerAdvice(annotations = RestController.class)
 public class ExceptionController {
@@ -30,5 +33,14 @@ public class ExceptionController {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> badRequestException(BadRequestException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<List<ExceptionDTO>> handleBadValidation(MethodArgumentNotValidException ex){
+        List<ExceptionDTO> message = ex.getFieldErrors().stream()
+                .map(ExceptionDTO::ofError)
+                .toList();
+
+        return ResponseEntity.badRequest().body(message);
     }
 }

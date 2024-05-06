@@ -7,6 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
@@ -26,9 +31,17 @@ public class PostDTO implements Serializable {
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(pattern = "dd-MM-yyyy")
+    @NotNull(message = "Date can't be null")
     private LocalDate date;
+
+    @Valid
     private ProductDTO product;
+
+    @NotNull(message = "Category can't be null")
     private Integer category;
+
+    @NotNull(message = "Price can't be null")
+    @Max(value = 10000000, message = "Max price is $10.000.000")
     private Double price;
     @JsonProperty("has_promo")
     private Boolean hasPromo;
