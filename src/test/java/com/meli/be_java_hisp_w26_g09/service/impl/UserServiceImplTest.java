@@ -112,6 +112,77 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Test to follow a customer by a seller")
+    void testFollowUser_SellerFollowCustomer_ExceptionThrown(){
+        Integer userId = 1;
+        Integer userIdToFollow = 2;
+
+        User seller = new User(userId, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
+        User customer = new User(userIdToFollow, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(seller));
+        when(userRepository.findById(userIdToFollow)).thenReturn(Optional.of(customer));
+
+        assertThrows(BadRequestException.class, () -> userService.follow(userId, userIdToFollow));
+    }
+
+    @Test
+    @DisplayName("Test to unfollow a user with valid IDs and roles")
+    void testUnfollowUser_ValidUserIdsAndRoles_Success(){
+        Integer userId = 1;
+        Integer userIdToUnfollow = 2;
+
+        User seller = new User(userIdToUnfollow, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
+        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), List.of(seller));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        ResponseDTO response = userService.unfollowUser(userId, userIdToUnfollow);
+
+        assertNotNull(response);
+        assertEquals("Unfollow successfull", response.getMessage());
+
+        verify(userRepository, atLeastOnce()).unfollowUser(customer, seller);
+    }
+
+    @Test
+    @DisplayName("Test to unfollow an user who is not on the followed list")
+    void testUnfollowUser_NonexistentInFollowedList_ExceptionThrown() {
+        Integer userId = 1;
+        Integer userIdToUnfollow = 2;
+
+        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+        when(userRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userIdToUnfollow));
+    }
+
+    @Test
+    @DisplayName("Test to unfollow an user who wants to unfollow themselves")
+    void testUnfollowUser_UnfollowThemselves_ExceptionThrown() {
+        Integer userId = 1;
+
+        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+        when(userRepository.findById(1)).thenReturn(Optional.of(customer));
+
+        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userId));
+    }
+
+    @Test
+    @DisplayName("Test to unfollow an user with invalid roles")
+    void testUnfollowUser_UnfollowUserWithInvalidRole_ExceptionThrown() {
+        Integer userId = 1;
+        Integer userIdToUnfollow = 2;
+
+        User seller = new User(userIdToUnfollow, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
+        User seller2 = new User(userId, "JohnDoe", new Role(Role.ID_SELLER, "Seller"), List.of(seller));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(seller2));
+
+        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userId));
+    }
+
+    @Test
     @DisplayName("get followeds by id customer sorted in ascending order")
     void testGetFollowedsByIdAscendingSuccessful() throws IOException {
         // arrange
@@ -288,20 +359,4 @@ class UserServiceImplTest {
         assertEquals("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.",
                 badRequestException.getMessage());
     }
-
-    @Test
-    @DisplayName("Test to follow a customer by a seller")
-    void testFollowUser_SellerFollowCustomer_ExceptionThrown(){
-        Integer userId = 1;
-        Integer userIdToFollow = 2;
-
-        User seller = new User(userId, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
-        User customer = new User(userIdToFollow, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(seller));
-        when(userRepository.findById(userIdToFollow)).thenReturn(Optional.of(customer));
-
-        assertThrows(BadRequestException.class, () -> userService.follow(userId, userIdToFollow));
-    }
-
 }
