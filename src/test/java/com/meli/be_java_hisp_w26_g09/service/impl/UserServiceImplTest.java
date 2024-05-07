@@ -123,7 +123,7 @@ class UserServiceImplTest {
         ResponseDTO response = userService.follow(userId, userIdToFollow);
 
         assertNotNull(response);
-        assertEquals(response.getMessage(), "The user with id " + userId + " is follow to " + userIdToFollow);
+        assertEquals("The user with id " + userId + " is follow to " + userIdToFollow, response.getMessage());
 
         verify(userRepository, times(1)).addFollowed(customer, seller);
     }
@@ -163,10 +163,25 @@ class UserServiceImplTest {
         Integer userIdToFollow = 2;
 
         User seller = new User(userIdToFollow, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
-        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"),Arrays.asList(seller));
+        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), Arrays.asList(seller));
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(customer));
         when(userRepository.findById(userIdToFollow)).thenReturn(Optional.of(seller));
+
+        assertThrows(BadRequestException.class, () -> userService.follow(userId, userIdToFollow));
+    }
+
+    @Test
+    @DisplayName("Test to follow a customer by a seller")
+    public void testFollowUser_SellerFollowCustomer_ExceptionThrown(){
+        Integer userId = 1;
+        Integer userIdToFollow = 2;
+
+        User seller = new User(userId, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
+        User customer = new User(userIdToFollow, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(seller));
+        when(userRepository.findById(userIdToFollow)).thenReturn(Optional.of(customer));
 
         assertThrows(BadRequestException.class, () -> userService.follow(userId, userIdToFollow));
     }
