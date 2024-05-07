@@ -109,17 +109,22 @@ class PostServiceImplTest {
         ProductFollowedListDTO list = new ProductFollowedListDTO();
 
         PostForListDTO post1 = new PostForListDTO(null, null, LocalDate.of(2024, 12, 1), null, null, null);
-        PostForListDTO post2 = new PostForListDTO(null, null, LocalDate.of(2024, 10, 3), null, null, null);
-        PostForListDTO post3 = new PostForListDTO(null, null, LocalDate.of(2024, 11, 2), null, null, null);
+        PostForListDTO post2 = new PostForListDTO(null, null, LocalDate.of(2024, 11, 2), null, null, null);
+        PostForListDTO post3 = new PostForListDTO(null, null, LocalDate.of(2024, 10, 3), null, null, null);
         PostForListDTO post4 = new PostForListDTO(null, null, LocalDate.of(2024, 9, 4), null, null, null);
-
-        list.setPosts(List.of(post1, post2, post3, post4));
-
+        ArrayList<PostForListDTO> listArr = new ArrayList<PostForListDTO>();
+        listArr.add(post1);
+        listArr.add(post2);
+        listArr.add(post3);
+        listArr.add(post4);
+        list.setPosts(listArr);
         return list;
     }
 
     private ProductFollowedListDTO getExpectedPostOrderAsc() {
         ProductFollowedListDTO list = new ProductFollowedListDTO();
+
+
 
         PostForListDTO post1 = new PostForListDTO(null, null, LocalDate.of(2024, 9, 4), null, null, null);
         PostForListDTO post2 = new PostForListDTO(null, null, LocalDate.of(2024, 10, 3), null, null, null);

@@ -95,13 +95,11 @@ public class PostServiceImpl implements IPostService {
         if (!("date_asc".equalsIgnoreCase(order) || "date_desc".equalsIgnoreCase(order)))
             throw new BadRequestException("Invalid order parameter. Valid values are 'date_asc' or 'date_desc'.");
  
-        productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
+        if ("date_asc".equalsIgnoreCase(order)) {
+            productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
                     .stream()
                     .sorted(Comparator.comparing(PostForListDTO::getDate))
                     .collect(Collectors.toList()));
-
-        if ("date_desc".equalsIgnoreCase(order)) {
-            Collections.reverse(productFollowedListDTOSorted.getPosts());
         }
         
         return productFollowedListDTOSorted;
