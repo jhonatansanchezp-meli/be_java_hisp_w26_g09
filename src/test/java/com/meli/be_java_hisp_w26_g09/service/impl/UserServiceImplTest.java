@@ -179,7 +179,7 @@ class UserServiceImplTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(seller2));
 
-        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userId));
+        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userIdToUnfollow));
     }
 
     @Test
