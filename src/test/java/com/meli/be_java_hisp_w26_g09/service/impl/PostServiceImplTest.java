@@ -25,8 +25,6 @@ class PostServiceImplTest {
     @Spy
     private PostServiceImpl systemUnderTest;
 
-    // Dependecies SUT
-
     @Test
     @DisplayName("Test to getFollowedPostLastTwo order by date_asc with 4 post")
     public void getPostOrderByDateAsc() {
