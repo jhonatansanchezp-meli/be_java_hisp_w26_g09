@@ -48,6 +48,23 @@ class UserServiceImplTest {
     void setup() throws IOException {
         userDTO = JsonUtil.readJsonFromFile("core/dto/userDTO.json", UserDTO.class);
         user = JsonUtil.readJsonFromFile("core/entity/user.json", User.class);
+        userDTO = new UserDTO();
+        userDTO.setUserId(2);
+        userDTO.setUserName("JohnDoe");
+
+        List<UserDTO> followers = new ArrayList<>();
+        UserDTO follower1 = new UserDTO();
+        follower1.setUserId(2);
+        follower1.setUserName("Bob");
+        followers.add(follower1);
+
+        UserDTO follower2 = new UserDTO();
+        follower2.setUserId(3);
+        follower2.setUserName("Margarita");
+        followers.add(follower2);
+
+        userDTO.setFollowers(followers);
+
     }
 
     @Test
@@ -399,4 +416,51 @@ class UserServiceImplTest {
         assertEquals(0, userServiceMock.getFollowersCount(idTest).getFollowersCount());
     }
 
+
+    @Test
+    @DisplayName("Test to get followers in ascending order from getFollowedByIdOrdered class")
+    public void getFollowedByIdOrderedTestAsc() {
+        // Arrange
+        User user = new User();
+        user.setUserId(2);
+        when(userRepository.findById(2)).thenReturn(Optional.of(user));
+        when(userService.getFollowersById(2)).thenReturn(userDTO);
+
+        // Act
+        UserDTO result = userService.getFollowersByIdOrdered(2, "name_asc");
+
+        // Assert
+        assertEquals("Bob", result.getFollowers().get(0).getUserName());
+    }
+
+    @Test
+    @DisplayName("Test to get followers in descending order from getFollowedByIdOrdered class")
+    public void getFollowedByIdOrderedTestDesc() {
+        // Arrange
+        User user = new User();
+        user.setUserId(2);
+        when(userRepository.findById(2)).thenReturn(Optional.of(user));
+        when(userService.getFollowersById(2)).thenReturn(userDTO);
+
+        // Act
+        UserDTO result = userService.getFollowersByIdOrdered(2, "name_desc");
+
+        // Assert
+        assertEquals("Margarita", result.getFollowers().get(0).getUserName());
+    }
+
+
+    @Test
+    @DisplayName("Test to get followers throwing error from getFollowedByIdOrdered class")
+    public void getFollowedByIdOrderedTestError() {
+        // Arrange
+        User user = new User();
+        user.setUserId(2);
+        when(userRepository.findById(2)).thenReturn(Optional.of(user));
+        when(userService.getFollowersById(2)).thenReturn(userDTO);
+
+
+        // Assert
+        assertThrows(BadRequestException.class, () -> userService.getFollowersByIdOrdered(2, "name_ascDesc"));
+    }
 }
