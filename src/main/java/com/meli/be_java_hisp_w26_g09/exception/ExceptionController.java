@@ -3,6 +3,7 @@ package com.meli.be_java_hisp_w26_g09.exception;
 import com.meli.be_java_hisp_w26_g09.dto.ExceptionDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,5 +43,10 @@ public class ExceptionController {
                 .toList();
 
         return ResponseEntity.badRequest().body(message);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionDTO> httpMessageNotReadableException(HttpMessageNotReadableException ex){
+        return ResponseEntity.badRequest().body(new ExceptionDTO("The format date is dd-MM-yyyy"));
     }
 }
