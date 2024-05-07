@@ -1,5 +1,6 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
+import com.meli.be_java_hisp_w26_g09.dto.RoleDTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
@@ -17,16 +18,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import java.io.IOException;
-
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.atLeastOnce;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -35,6 +35,8 @@ class UserServiceImplTest {
     private IUserRepository userRepository;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    UserServiceImpl userServiceMock;
 
     @InjectMocks
     UserServiceImpl userService;
@@ -359,4 +361,42 @@ class UserServiceImplTest {
         assertEquals("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.",
                 badRequestException.getMessage());
     }
+
+    @Test
+    @DisplayName("Get the number of followers of a seller")
+    public void getFollowersCountTest(){
+        RoleDTO roleDTO = new RoleDTO(1,"Seller");
+
+        List<UserDTO> followers = Arrays.asList(
+                new UserDTO(2, "follower1", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower2", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower3", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower4", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower5", null, new ArrayList<>(), new ArrayList<>(), 0));
+
+        UserDTO userDTOTest = new UserDTO(1,"Pedro Perez",roleDTO,new ArrayList<>(),followers,null);
+        Integer idTest = 1;
+
+        when(userServiceMock.getFollowersCount(idTest)).thenCallRealMethod();
+        when(userServiceMock.getFollowersById(idTest)).thenReturn(userDTOTest);
+
+        assertEquals(5, userServiceMock.getFollowersCount(idTest).getFollowersCount());
+    }
+
+    @Test
+    @DisplayName("Get the number of followers of a seller without followers")
+    public void getFollowersCountNullTest(){
+        RoleDTO roleDTO = new RoleDTO(1,"Seller");
+
+        List<UserDTO> followers = new ArrayList<>();
+
+        UserDTO userDTOTest = new UserDTO(1,"Pedro Perez",roleDTO,new ArrayList<>(),followers,null);
+        Integer idTest = 1;
+
+        when(userServiceMock.getFollowersCount(idTest)).thenCallRealMethod();
+        when(userServiceMock.getFollowersById(idTest)).thenReturn(userDTOTest);
+
+        assertEquals(0, userServiceMock.getFollowersCount(idTest).getFollowersCount());
+    }
+
 }
