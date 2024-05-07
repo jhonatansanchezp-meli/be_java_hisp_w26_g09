@@ -24,6 +24,22 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.meli.be_java_hisp_w26_g09.dto.ProductDTO;
+import com.meli.be_java_hisp_w26_g09.entity.Post;
+import com.meli.be_java_hisp_w26_g09.entity.Product;
+import com.meli.be_java_hisp_w26_g09.entity.Role;
+import com.meli.be_java_hisp_w26_g09.entity.User;
+import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
+import com.meli.be_java_hisp_w26_g09.repository.IPostRepository;
+import com.meli.be_java_hisp_w26_g09.repository.IUserRepository;
+import com.meli.be_java_hisp_w26_g09.util.mapper.PostMapper;
+import net.bytebuddy.dynamic.DynamicType;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import java.util.Optional;
+import static org.mockito.Mockito.*;
+
+
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
 
@@ -101,6 +117,8 @@ class PostServiceImplTest {
         //Assertions
         Assertions.assertTrue(result.getPosts().isEmpty());
     }
+
+
 
     public ProductFollowedListDTO getFakePostTwoWeeksAgoEmpty() {
         ProductFollowedListDTO emptyListPost = new ProductFollowedListDTO();
