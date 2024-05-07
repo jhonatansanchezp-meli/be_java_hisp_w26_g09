@@ -82,7 +82,6 @@ public class PostServiceImpl implements IPostService {
                         && (post.getDate().isBefore(now) || post.getDate().isEqual(now)))
                 .sorted(Comparator.comparing(Post::getDate).reversed())
                 .collect(Collectors.toList());
-
         ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
         productFollowedListDTO.setUserId(user.get().getUserId());
         productFollowedListDTO.setPosts(postMapper.postListToPostForListDTOS(followedPostsLastTwoWeeks));
@@ -95,13 +94,16 @@ public class PostServiceImpl implements IPostService {
 
         if (!("date_asc".equalsIgnoreCase(order) || "date_desc".equalsIgnoreCase(order)))
             throw new BadRequestException("Invalid order parameter. Valid values are 'date_asc' or 'date_desc'.");
-
-        if ("date_asc".equalsIgnoreCase(order)) {
-            productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
+ 
+        productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
                     .stream()
                     .sorted(Comparator.comparing(PostForListDTO::getDate))
                     .collect(Collectors.toList()));
+
+        if ("date_desc".equalsIgnoreCase(order)) {
+            Collections.reverse(productFollowedListDTOSorted.getPosts());
         }
+        
         return productFollowedListDTOSorted;
     }
 
