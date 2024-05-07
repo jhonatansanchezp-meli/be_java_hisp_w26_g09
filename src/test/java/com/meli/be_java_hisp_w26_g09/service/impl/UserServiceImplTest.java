@@ -1,5 +1,6 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
+import com.meli.be_java_hisp_w26_g09.dto.RoleDTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
@@ -17,16 +18,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import java.io.IOException;
-
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.atLeastOnce;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -35,6 +35,8 @@ class UserServiceImplTest {
     private IUserRepository userRepository;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    UserServiceImpl userServiceMock;
 
     @InjectMocks
     UserServiceImpl userService;
@@ -46,6 +48,23 @@ class UserServiceImplTest {
     void setup() throws IOException {
         userDTO = JsonUtil.readJsonFromFile("core/dto/userDTO.json", UserDTO.class);
         user = JsonUtil.readJsonFromFile("core/entity/user.json", User.class);
+        userDTO = new UserDTO();
+        userDTO.setUserId(2);
+        userDTO.setUserName("JohnDoe");
+
+        List<UserDTO> followers = new ArrayList<>();
+        UserDTO follower1 = new UserDTO();
+        follower1.setUserId(2);
+        follower1.setUserName("Bob");
+        followers.add(follower1);
+
+        UserDTO follower2 = new UserDTO();
+        follower2.setUserId(3);
+        follower2.setUserName("Margarita");
+        followers.add(follower2);
+
+        userDTO.setFollowers(followers);
+
     }
 
     @Test
@@ -109,6 +128,77 @@ class UserServiceImplTest {
         when(userRepository.findById(userIdToFollow)).thenReturn(Optional.of(seller));
 
         assertThrows(BadRequestException.class, () -> userService.follow(userId, userIdToFollow));
+    }
+
+    @Test
+    @DisplayName("Test to follow a customer by a seller")
+    void testFollowUser_SellerFollowCustomer_ExceptionThrown(){
+        Integer userId = 1;
+        Integer userIdToFollow = 2;
+
+        User seller = new User(userId, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
+        User customer = new User(userIdToFollow, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(seller));
+        when(userRepository.findById(userIdToFollow)).thenReturn(Optional.of(customer));
+
+        assertThrows(BadRequestException.class, () -> userService.follow(userId, userIdToFollow));
+    }
+
+    @Test
+    @DisplayName("Test to unfollow a user with valid IDs and roles")
+    void testUnfollowUser_ValidUserIdsAndRoles_Success(){
+        Integer userId = 1;
+        Integer userIdToUnfollow = 2;
+
+        User seller = new User(userIdToUnfollow, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
+        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), List.of(seller));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        ResponseDTO response = userService.unfollowUser(userId, userIdToUnfollow);
+
+        assertNotNull(response);
+        assertEquals("Unfollow successfull", response.getMessage());
+
+        verify(userRepository, atLeastOnce()).unfollowUser(customer, seller);
+    }
+
+    @Test
+    @DisplayName("Test to unfollow an user who is not on the followed list")
+    void testUnfollowUser_NonexistentInFollowedList_ExceptionThrown() {
+        Integer userId = 1;
+        Integer userIdToUnfollow = 2;
+
+        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+        when(userRepository.findById(userId)).thenReturn(Optional.of(customer));
+
+        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userIdToUnfollow));
+    }
+
+    @Test
+    @DisplayName("Test to unfollow an user who wants to unfollow themselves")
+    void testUnfollowUser_UnfollowThemselves_ExceptionThrown() {
+        Integer userId = 1;
+
+        User customer = new User(userId, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+        when(userRepository.findById(1)).thenReturn(Optional.of(customer));
+
+        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userId));
+    }
+
+    @Test
+    @DisplayName("Test to unfollow an user with invalid roles")
+    void testUnfollowUser_UnfollowUserWithInvalidRole_ExceptionThrown() {
+        Integer userId = 1;
+        Integer userIdToUnfollow = 2;
+
+        User seller = new User(userIdToUnfollow, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
+        User seller2 = new User(userId, "JohnDoe", new Role(Role.ID_SELLER, "Seller"), List.of(seller));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(seller2));
+
+        assertThrows(BadRequestException.class, () -> userService.unfollowUser(userId, userIdToUnfollow));
     }
 
     @Test
@@ -290,18 +380,87 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test to follow a customer by a seller")
-    void testFollowUser_SellerFollowCustomer_ExceptionThrown(){
-        Integer userId = 1;
-        Integer userIdToFollow = 2;
+    @DisplayName("Get the number of followers of a seller")
+    public void getFollowersCountTest(){
+        RoleDTO roleDTO = new RoleDTO(1,"Seller");
 
-        User seller = new User(userId, "JaneSmith", new Role(Role.ID_SELLER, "Seller"), new ArrayList<>());
-        User customer = new User(userIdToFollow, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), new ArrayList<>());
+        List<UserDTO> followers = Arrays.asList(
+                new UserDTO(2, "follower1", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower2", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower3", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower4", null, new ArrayList<>(), new ArrayList<>(), 0),
+                new UserDTO(3, "follower5", null, new ArrayList<>(), new ArrayList<>(), 0));
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(seller));
-        when(userRepository.findById(userIdToFollow)).thenReturn(Optional.of(customer));
+        UserDTO userDTOTest = new UserDTO(1,"Pedro Perez",roleDTO,new ArrayList<>(),followers,null);
+        Integer idTest = 1;
 
-        assertThrows(BadRequestException.class, () -> userService.follow(userId, userIdToFollow));
+        when(userServiceMock.getFollowersCount(idTest)).thenCallRealMethod();
+        when(userServiceMock.getFollowersById(idTest)).thenReturn(userDTOTest);
+
+        assertEquals(5, userServiceMock.getFollowersCount(idTest).getFollowersCount());
     }
 
+    @Test
+    @DisplayName("Get the number of followers of a seller without followers")
+    public void getFollowersCountNullTest(){
+        RoleDTO roleDTO = new RoleDTO(1,"Seller");
+
+        List<UserDTO> followers = new ArrayList<>();
+
+        UserDTO userDTOTest = new UserDTO(1,"Pedro Perez",roleDTO,new ArrayList<>(),followers,null);
+        Integer idTest = 1;
+
+        when(userServiceMock.getFollowersCount(idTest)).thenCallRealMethod();
+        when(userServiceMock.getFollowersById(idTest)).thenReturn(userDTOTest);
+
+        assertEquals(0, userServiceMock.getFollowersCount(idTest).getFollowersCount());
+    }
+
+
+    @Test
+    @DisplayName("Test to get followers in ascending order from getFollowedByIdOrdered class")
+    public void getFollowedByIdOrderedTestAsc() {
+        // Arrange
+        User user = new User();
+        user.setUserId(2);
+        when(userRepository.findById(2)).thenReturn(Optional.of(user));
+        when(userService.getFollowersById(2)).thenReturn(userDTO);
+
+        // Act
+        UserDTO result = userService.getFollowersByIdOrdered(2, "name_asc");
+
+        // Assert
+        assertEquals("Bob", result.getFollowers().get(0).getUserName());
+    }
+
+    @Test
+    @DisplayName("Test to get followers in descending order from getFollowedByIdOrdered class")
+    public void getFollowedByIdOrderedTestDesc() {
+        // Arrange
+        User user = new User();
+        user.setUserId(2);
+        when(userRepository.findById(2)).thenReturn(Optional.of(user));
+        when(userService.getFollowersById(2)).thenReturn(userDTO);
+
+        // Act
+        UserDTO result = userService.getFollowersByIdOrdered(2, "name_desc");
+
+        // Assert
+        assertEquals("Margarita", result.getFollowers().get(0).getUserName());
+    }
+
+
+    @Test
+    @DisplayName("Test to get followers throwing error from getFollowedByIdOrdered class")
+    public void getFollowedByIdOrderedTestError() {
+        // Arrange
+        User user = new User();
+        user.setUserId(2);
+        when(userRepository.findById(2)).thenReturn(Optional.of(user));
+        when(userService.getFollowersById(2)).thenReturn(userDTO);
+
+
+        // Assert
+        assertThrows(BadRequestException.class, () -> userService.getFollowersByIdOrdered(2, "name_ascDesc"));
+    }
 }
