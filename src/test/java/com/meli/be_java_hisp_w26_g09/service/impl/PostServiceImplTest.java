@@ -3,6 +3,7 @@ package com.meli.be_java_hisp_w26_g09.service.impl;
 import static org.mockito.Mockito.doReturn;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -20,21 +21,6 @@ import com.meli.be_java_hisp_w26_g09.dto.ProductFollowedListDTO;
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
 
-    /**
-     * T-0006 Tests for verify correctly order by asc and desc of post two week ago.
-     * Service target: PostServiceImpl
-     * 
-     * Dependency:
-     * - Self -> findFollowedPostLastTwoWeeks. Then, last depends
-     * -> UserRepository
-     * -> PostRepository
-     * -> PostMapper
-     * Case #1:
-     * - paramter: data_asc
-     * Case #2:
-     * - parameter: data_desc
-     */
-
     // SUT
     @Spy
     private PostServiceImpl systemUnderTest;
@@ -42,7 +28,7 @@ class PostServiceImplTest {
     // Dependecies SUT
 
     @Test
-    @DisplayName("Test to getFollowedPostLastTwo order by date_asc")
+    @DisplayName("Test to getFollowedPostLastTwo order by date_asc with 4 post")
     public void getPostOrderByDateAsc() {
 
         // Arrange
@@ -70,7 +56,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test to getFollowedPostLastTwo order by date_desc")
+    @DisplayName("Test to getFollowedPostLastTwo order by date_desc with 4 post")
     public void getPostOrderByDateDesc() {
 
         // Arrange
@@ -94,11 +80,31 @@ class PostServiceImplTest {
             PostForListDTO postResult = postsResult.get(i);
             Assertions.assertEquals(postExpected.getDate(), postResult.getDate());
         }
-
     }
 
+    @Test
+    @DisplayName("Test to getFollowedPostLastTwoWeeaksOrder when self dependency is Empty (post)")
+    public void getPostOrderAnyDependencyEmpty() {
+        //Arrange
+        String order = "date_asc";
+        int idUser = 1;
+
+
+        //Act
+        doReturn(getFakePostTwoWeeksAgoEmpty()).when(systemUnderTest).findFollowedPostsLastTwoWeeks(idUser);
+        ProductFollowedListDTO result = systemUnderTest.findFollowedPostsLastTwoWeeksSorted(idUser, order);
+        //Assertions
+        Assertions.assertTrue(result.getPosts().isEmpty());
+    }
+
+    public ProductFollowedListDTO getFakePostTwoWeeksAgoEmpty() {
+        ProductFollowedListDTO emptyListPost = new ProductFollowedListDTO();
+        emptyListPost.setPosts(new ArrayList<>());
+        return emptyListPost;
+    }
+    
     /**
-     * 
+     * Method util
      * @return Return a ProductFollowedListDTO that contain 4 LocalDates unorder
      */
     private ProductFollowedListDTO getFakePostTwoWeeksAgo() {
