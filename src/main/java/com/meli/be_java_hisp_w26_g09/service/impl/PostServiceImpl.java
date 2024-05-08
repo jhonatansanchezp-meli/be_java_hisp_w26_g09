@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -56,7 +55,7 @@ public class PostServiceImpl implements IPostService {
             throw new BadRequestException("The customer can't create posts ");
 
         Post postEntity = postMapper.postDTOtoPost(post);
-        if (!productRepository.isCreated(postEntity.getProduct()))
+        if (Boolean.FALSE.equals(productRepository.isCreated(postEntity.getProduct())))
             productRepository.createProduct(postEntity.getProduct());
 
         postRepository.createPost(postEntity);
@@ -81,7 +80,7 @@ public class PostServiceImpl implements IPostService {
                 .filter(post -> (post.getDate().isAfter(twoWeeksAgo) || post.getDate().isEqual(twoWeeksAgo))
                         && (post.getDate().isBefore(now) || post.getDate().isEqual(now)))
                 .sorted(Comparator.comparing(Post::getDate).reversed())
-                .collect(Collectors.toList());
+                .toList();
         ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
         productFollowedListDTO.setUserId(user.get().getUserId());
         productFollowedListDTO.setPosts(postMapper.postListToPostForListDTOS(followedPostsLastTwoWeeks));
@@ -99,7 +98,7 @@ public class PostServiceImpl implements IPostService {
             productFollowedListDTOSorted.setPosts(productFollowedListDTOSorted.getPosts()
                     .stream()
                     .sorted(Comparator.comparing(PostForListDTO::getDate))
-                    .collect(Collectors.toList()));
+                    .toList());
         }
         
         return productFollowedListDTOSorted;

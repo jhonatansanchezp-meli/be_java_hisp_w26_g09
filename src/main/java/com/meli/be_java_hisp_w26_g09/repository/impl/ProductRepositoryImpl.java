@@ -32,7 +32,7 @@ public class ProductRepositoryImpl implements IProductRepository {
     }
 
     @Override
-    public Boolean isCreated(Product product) {
+    public boolean isCreated(Product product) {
         return listOfProduct.stream().anyMatch(p -> p.equals(product));
     }
 

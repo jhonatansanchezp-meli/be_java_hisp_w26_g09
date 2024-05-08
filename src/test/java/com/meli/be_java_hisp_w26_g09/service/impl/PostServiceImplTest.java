@@ -27,8 +27,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.meli.be_java_hisp_w26_g09.dto.PostForListDTO;
 import com.meli.be_java_hisp_w26_g09.dto.ProductFollowedListDTO;
 import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
+
 import java.io.IOException;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -37,83 +39,69 @@ import static org.mockito.Mockito.*;
 class PostServiceImplTest {
 
     // SUT
+    @Mock
+    IUserRepository userRepository;
+    @Mock
+    IPostRepository postRepository;
     @Spy
-    private PostServiceImpl systemUnderTest;
+    PostMapper postMapper;
+
+    @InjectMocks
+    PostServiceImpl postServiceMock;
+
+    @Spy
+    private PostServiceImpl postService;
+
 
     @Test
     @DisplayName("Test to getFollowedPostLastTwo order by date_asc with 4 post")
-    public void getPostOrderByDateAsc() {
-
+    void getPostOrderByDateAsc() {
         // Arrange
         int idUser = 1;
         String order = "date_asc";
         ProductFollowedListDTO expected = getExpectedPostOrderAsc();
 
         // Act
-        doReturn(getFakePostTwoWeeksAgo()).when(systemUnderTest).findFollowedPostsLastTwoWeeks(idUser);
-        ProductFollowedListDTO result = systemUnderTest.findFollowedPostsLastTwoWeeksSorted(idUser, order);
+        doReturn(getFakePostTwoWeeksAgo()).when(postService).findFollowedPostsLastTwoWeeks(idUser);
+        ProductFollowedListDTO result = postService.findFollowedPostsLastTwoWeeksSorted(idUser, order);
 
-        // Asertions
-
-        Assertions.assertEquals(expected.getPosts().size(), result.getPosts().size());
-
-        List<PostForListDTO> postsExpected = expected.getPosts();
-        List<PostForListDTO> postsResult   = result.getPosts();
-
-        for (int i = 0; i < postsExpected.size(); i++) {
-            PostForListDTO postExpected = postsExpected.get(i);
-            PostForListDTO postResult = postsResult.get(i);
-            Assertions.assertEquals(postExpected.getDate(), postResult.getDate());
-        }
+        // Assert
+        assertEquals(expected.getPosts().size(), result.getPosts().size());
+        assertIterableEquals(expected.getPosts(), result.getPosts());
     }
-    @Spy
-    private PostServiceImpl postService;
 
     @Test
     @DisplayName("Test to getFollowedPostLastTwo order by date_desc with 4 post")
-    public void getPostOrderByDateDesc() {
-
+    void getPostOrderByDateDesc() {
         // Arrange
         int idUser = 1;
         String order = "date_desc";
         ProductFollowedListDTO expected = getExpectedPostOrderDesc();
 
         // Act
-        doReturn(getFakePostTwoWeeksAgo()).when(systemUnderTest).findFollowedPostsLastTwoWeeks(idUser);
-        ProductFollowedListDTO result = systemUnderTest.findFollowedPostsLastTwoWeeksSorted(idUser, order);
+        doReturn(getFakePostTwoWeeksAgo()).when(postService).findFollowedPostsLastTwoWeeks(idUser);
+        ProductFollowedListDTO result = postService.findFollowedPostsLastTwoWeeksSorted(idUser, order);
 
-        // Asertions
-
-        Assertions.assertEquals(expected.getPosts().size(), result.getPosts().size());
-
-        List<PostForListDTO> postsExpected = expected.getPosts();
-        List<PostForListDTO> postsResult   = result.getPosts();
-
-        for (int i = 0; i < postsExpected.size(); i++) {
-            PostForListDTO postExpected = postsExpected.get(i);
-            PostForListDTO postResult = postsResult.get(i);
-            Assertions.assertEquals(postExpected.getDate(), postResult.getDate());
-        }
+        // Assert
+        assertEquals(expected.getPosts().size(), result.getPosts().size());
+        assertIterableEquals(expected.getPosts(), result.getPosts());
     }
 
     @Test
     @DisplayName("Test to getFollowedPostLastTwoWeeaksOrder when self dependency is Empty (post)")
-    public void getPostOrderAnyDependencyEmpty() {
-        //Arrange
+    void getPostOrderAnyDependencyEmpty() {
+        // Arrange
         String order = "date_asc";
         int idUser = 1;
 
-
         //Act
-        doReturn(getFakePostTwoWeeksAgoEmpty()).when(systemUnderTest).findFollowedPostsLastTwoWeeks(idUser);
-        ProductFollowedListDTO result = systemUnderTest.findFollowedPostsLastTwoWeeksSorted(idUser, order);
+        doReturn(getFakePostTwoWeeksAgoEmpty()).when(postService).findFollowedPostsLastTwoWeeks(idUser);
+        ProductFollowedListDTO result = postService.findFollowedPostsLastTwoWeeksSorted(idUser, order);
         //Assertions
-        Assertions.assertTrue(result.getPosts().isEmpty());
+        assertTrue(result.getPosts().isEmpty());
     }
 
-
-
-    public ProductFollowedListDTO getFakePostTwoWeeksAgoEmpty() {
+    private ProductFollowedListDTO getFakePostTwoWeeksAgoEmpty() {
         ProductFollowedListDTO emptyListPost = new ProductFollowedListDTO();
         emptyListPost.setPosts(new ArrayList<>());
         return emptyListPost;
@@ -132,16 +120,12 @@ class PostServiceImplTest {
         // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
 
-
         // Act
         ProductFollowedListDTO result = postService.findFollowedPostsLastTwoWeeksSorted(userID, order);
 
-
         // Assert
         assertEquals(result.getUserId(), userID);
-        assertEquals(result.getPosts().get(0).getDate(), LocalDate.of(2024, 04, 30));
-
-
+        assertEquals(result.getPosts().get(0).getDate(), LocalDate.of(2024, 4, 30));
     }
 
     @Test
@@ -174,32 +158,18 @@ class PostServiceImplTest {
         // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
 
-
         // Act
         ProductFollowedListDTO result = postService.findFollowedPostsLastTwoWeeksSorted(userID, order);
 
-
         // Assert
         assertEquals(result.getUserId(), userID);
-        assertEquals(result.getPosts().get(0).getDate(), LocalDate.of(2024, 04, 29));
+        assertEquals(result.getPosts().get(0).getDate(), LocalDate.of(2024, 4, 29));
 
     }
 
-
-    @Mock
-    IUserRepository userRepository;
-
-    @Mock
-    IPostRepository postRepository;
-
-    @Spy
-    PostMapper postMapper;
-
-    @InjectMocks
-    PostServiceImpl postServiceMock;
     @Test
     @DisplayName("Test to findFollowedPostsLastTwoWeeks to verify if this only take the last two weeks posts")
-    public void getPostLastTwoWeeks(){
+    void getPostLastTwoWeeks() {
         // Arrange
         int idCustomer = 1;
         int idSeller = 2;
@@ -208,9 +178,11 @@ class PostServiceImplTest {
         when(userRepository.findById(idCustomer)).thenReturn(Optional.of(customer));
         when(postRepository.findAll()).thenReturn(getPostTwoWeeksAgoBySeller(idSeller));
         ProductFollowedListDTO expected = getPostTwoWeeksAgoBySellerExpected(idSeller);
+
         // Act
         ProductFollowedListDTO result = postServiceMock.findFollowedPostsLastTwoWeeks(idCustomer);
-        // Asertions
+
+        // Assert
         for (int i = 0; i < expected.getPosts().size(); i++) {
             Assertions.assertEquals(expected.getPosts().get(i).getPostId(), result.getPosts().get(i).getPostId());
         }
@@ -218,7 +190,7 @@ class PostServiceImplTest {
 
     @Test
     @DisplayName("Test to findFollowedPostsLastTwoWeeks to verify a user without followeds")
-    public void getPostLastTwoWeeksWithAUserwithoutFolloweds(){
+    void getPostLastTwoWeeksWithAUserwithoutFolloweds() {
         // Arrange
         int idCustomer = 1;
         User customer = new User(idCustomer, "JohnDoe", new Role(Role.ID_CUSTOMER, "Customer"), null);
@@ -229,16 +201,17 @@ class PostServiceImplTest {
 
     @Test
     @DisplayName("Test to findFollowedPostsLastTwoWeeks to verify a invalid user")
-    public void getPostLastTwoWeeksWithInvalidUser(){
+    void getPostLastTwoWeeksWithInvalidUser() {
         // Arrange
         int idCustomer = 3;
         when(userRepository.findById(idCustomer)).thenReturn(Optional.empty());
-        // Asertions
+        // Act and assert
         Assertions.assertThrows(NotFoundException.class, () -> postServiceMock.findFollowedPostsLastTwoWeeks(3));
     }
 
     /**
      * Method util
+     *
      * @return Return a ProductFollowedListDTO that contain 4 LocalDates unorder
      */
     private ProductFollowedListDTO getFakePostTwoWeeksAgo() {
@@ -248,7 +221,7 @@ class PostServiceImplTest {
         PostForListDTO post2 = new PostForListDTO(null, null, LocalDate.of(2024, 11, 2), null, null, null);
         PostForListDTO post3 = new PostForListDTO(null, null, LocalDate.of(2024, 10, 3), null, null, null);
         PostForListDTO post4 = new PostForListDTO(null, null, LocalDate.of(2024, 9, 4), null, null, null);
-        ArrayList<PostForListDTO> listArr = new ArrayList<PostForListDTO>();
+        ArrayList<PostForListDTO> listArr = new ArrayList<>();
         listArr.add(post1);
         listArr.add(post2);
         listArr.add(post3);
@@ -263,7 +236,7 @@ class PostServiceImplTest {
         PostForListDTO post1 = new PostForListDTO(idSeller, 3, LocalDate.of(2024, 5, 3), new ProductDTO(), 1, 100.0);
         PostForListDTO post2 = new PostForListDTO(idSeller, 2, LocalDate.of(2024, 5, 2), new ProductDTO(), 1, 100.0);
         PostForListDTO post3 = new PostForListDTO(idSeller, 1, LocalDate.of(2024, 5, 1), new ProductDTO(), 1, 100.0);
-        ArrayList<PostForListDTO> listArr = new ArrayList<PostForListDTO>();
+        ArrayList<PostForListDTO> listArr = new ArrayList<>();
         listArr.add(post1);
         listArr.add(post2);
         listArr.add(post3);
@@ -272,11 +245,11 @@ class PostServiceImplTest {
     }
 
     private List<Post> getPostTwoWeeksAgoBySeller(int idSeller) {
-        Post post1 = new Post(1, idSeller, LocalDate.of(2024, 5, 1), new Product(1,"test1","a","b","azul",""), 1, 100.0, false, null);
-        Post post2 = new Post(2, idSeller, LocalDate.of(2024, 5, 2), new Product(2,"test2","a","b","azul",""), 1, 100.0,false, null);
-        Post post3 = new Post(3, idSeller, LocalDate.of(2024, 5, 3), new Product(3,"test3","a","b","azul",""), 1, 100.0,false, null);
-        Post post4 = new Post(4, idSeller, LocalDate.of(2024, 4, 4), new Product(4,"test4","a","b","azul",""), 1, 100.0,false, null);
-        List<Post> listPosts = new ArrayList();
+        Post post1 = new Post(1, idSeller, LocalDate.of(2024, 5, 1), new Product(1, "test1", "a", "b", "azul", ""), 1, 100.0, false, null);
+        Post post2 = new Post(2, idSeller, LocalDate.of(2024, 5, 2), new Product(2, "test2", "a", "b", "azul", ""), 1, 100.0, false, null);
+        Post post3 = new Post(3, idSeller, LocalDate.of(2024, 5, 3), new Product(3, "test3", "a", "b", "azul", ""), 1, 100.0, false, null);
+        Post post4 = new Post(4, idSeller, LocalDate.of(2024, 4, 4), new Product(4, "test4", "a", "b", "azul", ""), 1, 100.0, false, null);
+        List<Post> listPosts = new ArrayList<>();
         listPosts.add(post1);
         listPosts.add(post2);
         listPosts.add(post3);
@@ -285,11 +258,8 @@ class PostServiceImplTest {
     }
 
 
-
     private ProductFollowedListDTO getExpectedPostOrderAsc() {
         ProductFollowedListDTO list = new ProductFollowedListDTO();
-
-
 
         PostForListDTO post1 = new PostForListDTO(null, null, LocalDate.of(2024, 9, 4), null, null, null);
         PostForListDTO post2 = new PostForListDTO(null, null, LocalDate.of(2024, 10, 3), null, null, null);
