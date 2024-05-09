@@ -8,18 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleMapper {
 
-    public RoleDTO roleToRoleDTO(Role role) {
-        RoleDTO roleDTO = new RoleDTO(role.getIdRole(), role.getNameRole());
-        return roleDTO;
-    }
-
-    public Role roleDTOToRole(RoleDTO roleDTO) {
-        if (roleDTO == null)
-            return new Role();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        return objectMapper.convertValue(roleDTO, Role.class);
+    public static RoleDTO roleToRoleDTO(Role role) {
+        return new RoleDTO(role.getIdRole(), role.getNameRole());
     }
 
 }

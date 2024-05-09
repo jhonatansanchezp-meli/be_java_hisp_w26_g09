@@ -305,4 +305,6 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value(exceptionDTOExpect.getMessage()));
     }
 
+
+
 }

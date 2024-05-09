@@ -482,4 +482,18 @@ class UserServiceImplTest {
         // assert
         assertEquals(userDTOList.size(), responseUserDTOList.size());
     }
+
+    @Test
+    @DisplayName("Get Followers by id, when user by id not content")
+    void testGetFollowedById_NotContentException() {
+        // arrange
+        user.getRole().setIdRole(2);
+        when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
+
+        // act and assert
+        NotContentFollowedException notContentFollowedException = assertThrows(NotContentFollowedException.class,
+                () -> userService.getFollowedById(user.getUserId()));
+
+        assertEquals("The seller does not have the option to follow", notContentFollowedException.getMessage());
+    }
 }

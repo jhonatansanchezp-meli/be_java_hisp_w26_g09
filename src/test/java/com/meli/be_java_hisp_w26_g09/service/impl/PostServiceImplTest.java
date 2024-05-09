@@ -6,15 +6,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.meli.be_java_hisp_w26_g09.dto.ProductDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meli.be_java_hisp_w26_g09.dto.*;
 import com.meli.be_java_hisp_w26_g09.entity.Post;
 import com.meli.be_java_hisp_w26_g09.entity.Product;
 import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
 import com.meli.be_java_hisp_w26_g09.repository.IPostRepository;
+import com.meli.be_java_hisp_w26_g09.repository.IProductRepository;
 import com.meli.be_java_hisp_w26_g09.repository.IUserRepository;
 import com.meli.be_java_hisp_w26_g09.util.mapper.PostMapper;
+import com.meli.be_java_hisp_w26_g09.util.mapper.RoleMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +27,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import com.meli.be_java_hisp_w26_g09.util.JsonUtil;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.meli.be_java_hisp_w26_g09.dto.PostForListDTO;
-import com.meli.be_java_hisp_w26_g09.dto.ProductFollowedListDTO;
 import com.meli.be_java_hisp_w26_g09.exception.BadRequestException;
 
 import java.io.IOException;
@@ -43,6 +44,8 @@ class PostServiceImplTest {
     IUserRepository userRepository;
     @Mock
     IPostRepository postRepository;
+    @Mock
+    IProductRepository productRepository;
     @Spy
     PostMapper postMapper;
 
@@ -281,6 +284,58 @@ class PostServiceImplTest {
         list.setPosts(List.of(post1, post2, post3, post4));
 
         return list;
+    }
+
+    @Test
+    @DisplayName("Add post successful")
+    void testAddPostSuccessful() throws IOException {
+        // arrange
+        ObjectMapper objectMapper = new ObjectMapper();
+        PostDTO postDTO = JsonUtil.readJsonFromFile("core/dto/postDTO.json", PostDTO.class);
+        Post post = objectMapper.convertValue(postDTO, Post.class);
+        User user = JsonUtil.readJsonFromFile("core/entity/userSeller.json", User.class);
+        ResponseDTO responseDTOExpected = JsonUtil.readJsonFromFile("postcreated/successful/responseDTO.json",
+                ResponseDTO.class);
+
+        when(userRepository.findById(postDTO.getUserId())).thenReturn(Optional.of(user));
+        when(postMapper.postDTOtoPost(postDTO)).thenReturn(post);
+        when(productRepository.isCreated(post.getProduct())).thenReturn(Boolean.FALSE);
+        doNothing().when(productRepository).createProduct(post.getProduct());
+        doNothing().when(postRepository).createPost(post);
+
+        // act
+        ResponseDTO responseDTOActual = postServiceMock.addPost(postDTO);
+
+        // assert
+        assertEquals(responseDTOExpected.getMessage(), responseDTOActual.getMessage());
+    }
+
+    @Test
+    @DisplayName("Add post when user is empty")
+    void testAddPost_BadRequest() throws IOException {
+        // arrange
+        PostDTO postDTO = JsonUtil.readJsonFromFile("core/dto/postDTO.json", PostDTO.class);
+
+        when(userRepository.findById(postDTO.getUserId()))
+                .thenThrow(new BadRequestException("The user_id does not exist "));
+
+        // act and assert
+        assertThrows(BadRequestException.class, ()-> postServiceMock.addPost(postDTO));
+    }
+
+    @Test
+    @DisplayName("Add post when user is role null")
+    void testAddPost_RoleNullBadRequest() throws IOException {
+        // arrange
+        ObjectMapper objectMapper = new ObjectMapper();
+        PostDTO postDTO = JsonUtil.readJsonFromFile("core/dto/postDTO.json", PostDTO.class);
+        User user = JsonUtil.readJsonFromFile("core/entity/userSeller.json", User.class);
+        user.setRole(null);
+
+        when(userRepository.findById(postDTO.getUserId())).thenReturn(Optional.of(user));
+
+        // act and assert
+        assertThrows(BadRequestException.class, () -> postServiceMock.addPost(postDTO));
     }
 
 }

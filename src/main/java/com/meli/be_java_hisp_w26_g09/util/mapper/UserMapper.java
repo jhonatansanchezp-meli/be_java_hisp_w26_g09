@@ -1,7 +1,6 @@
 package com.meli.be_java_hisp_w26_g09.util.mapper;
 
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
-import com.meli.be_java_hisp_w26_g09.entity.Role;
 import com.meli.be_java_hisp_w26_g09.entity.User;
 import org.springframework.stereotype.Component;
 

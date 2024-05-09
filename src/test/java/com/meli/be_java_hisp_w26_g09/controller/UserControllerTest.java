@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meli.be_java_hisp_w26_g09.dto.ExceptionDTO;
 import com.meli.be_java_hisp_w26_g09.dto.ResponseDTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
+import com.meli.be_java_hisp_w26_g09.exception.NotContentFollowedException;
 import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
 import com.meli.be_java_hisp_w26_g09.service.IUserService;
 import com.meli.be_java_hisp_w26_g09.util.JsonUtil;
@@ -264,6 +265,27 @@ class UserControllerTest {
 
         assertEquals(objectMapper.writeValueAsString(userDTO),
                 mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @DisplayName("Get all followed by seller id when not content followed")
+    void testGetAllFollowedByCustomerId_NotContentFollowedException() throws Exception {
+        // arrange
+        int customerID = 2;
+        ExceptionDTO exceptionDTO = JsonUtil.readJsonFromFile(
+                "followed/notcontent/exceptionDTO.json", ExceptionDTO.class);
+
+        when(userService.getFollowedById(customerID))
+                .thenThrow(new NotContentFollowedException("The seller does not have the option to follow"));
+
+        // act and assert
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/users/{userId}/followed/list", customerID)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value(exceptionDTO.getMessage()));
     }
 
     @Test
