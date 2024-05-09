@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonPropertyOrder({"user_id", "posts"})
 public class ProductFollowedListDTO {
     @JsonProperty("user_id")
     private int userId;
     private List<PostForListDTO> posts;
+
 }

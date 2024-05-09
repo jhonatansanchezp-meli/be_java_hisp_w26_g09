@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ProductDTO implements Serializable {

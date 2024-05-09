@@ -18,7 +18,8 @@ public class JsonUtil {
 
     public static <T> List<T> readJsonFromFileToList(String fileName, Class<T> valueType) throws IOException {
         String filePath = "src/test/resources/json/" + fileName;
-        return objectMapper.readValue(new File(filePath), objectMapper.getTypeFactory().constructCollectionType(List.class, valueType));
+        return objectMapper.readValue(new File(filePath),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, valueType));
     }
 
 }

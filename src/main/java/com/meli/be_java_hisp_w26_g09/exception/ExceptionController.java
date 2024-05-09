@@ -15,24 +15,24 @@ import java.util.List;
 @ControllerAdvice(annotations = RestController.class)
 public class ExceptionController {
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> notFoundException(NotFoundException e) {
+    public ResponseEntity<ExceptionDTO> notFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionDTO(e.getMessage()));
     }
 
     @ExceptionHandler(NotContentFollowedException.class)
-    public ResponseEntity<?> notContentFollowedException(NotContentFollowedException e) {
+    public ResponseEntity<ExceptionDTO> notContentFollowedException(NotContentFollowedException e) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ExceptionDTO(e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<?> notSameTyping(MethodArgumentTypeMismatchException e) {
-        return ResponseEntity.badRequest().body(new ExceptionDTO("Not same typing attribute"));
+    public ResponseEntity<ExceptionDTO> notSameTyping(MethodArgumentTypeMismatchException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDTO("Not same type attribute " + e.getName()));
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<?> badRequestException(BadRequestException e){
+    public ResponseEntity<ExceptionDTO> badRequestException(BadRequestException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionDTO(e.getMessage()));
     }
 

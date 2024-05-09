@@ -15,7 +15,6 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

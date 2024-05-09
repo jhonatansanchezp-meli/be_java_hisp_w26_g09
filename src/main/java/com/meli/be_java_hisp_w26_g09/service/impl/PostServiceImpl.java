@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 public class PostServiceImpl implements IPostService {
@@ -32,20 +31,7 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public ResponseDTO addPost(PostDTO post) {
-        if (post.getPrice() < 0)
-            throw new BadRequestException("The price cannot be negative");
-
-        if (post.getCategory() <= 0)
-            throw new BadRequestException("The category is not valid");
-
-        post.setHasPromo(false);
-        if (post.getDiscount() != null && post.getDiscount() != 0.0)
-            throw new BadRequestException("Cannot add a promo post on this end point");
-
         post.setDiscount(0.0);
-
-        if (validate(post))
-            throw new BadRequestException("No field can be null");
 
         Optional<User> user = userRepository.findById(post.getUserId());
         if (user.isEmpty())
@@ -73,18 +59,16 @@ public class PostServiceImpl implements IPostService {
                 .filter(post -> post.getUserId().equals(seller.getUserId()))
                 .toList()));
 
-        LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
         LocalDate now = LocalDate.now();
+        LocalDate twoWeeksAgo = now.minusWeeks(2);
 
         List<Post> followedPostsLastTwoWeeks = followedPosts.stream()
                 .filter(post -> (post.getDate().isAfter(twoWeeksAgo) || post.getDate().isEqual(twoWeeksAgo))
                         && (post.getDate().isBefore(now) || post.getDate().isEqual(now)))
                 .sorted(Comparator.comparing(Post::getDate).reversed())
                 .toList();
-        ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
-        productFollowedListDTO.setUserId(user.get().getUserId());
-        productFollowedListDTO.setPosts(postMapper.postListToPostForListDTOS(followedPostsLastTwoWeeks));
-        return productFollowedListDTO;
+        return new ProductFollowedListDTO(user.get().getUserId(),
+                postMapper.postListToPostForListDTOS(followedPostsLastTwoWeeks));
     }
 
     @Override
@@ -104,12 +88,4 @@ public class PostServiceImpl implements IPostService {
         return productFollowedListDTOSorted;
     }
 
-
-    private boolean validate(PostDTO post) {
-        return Stream.of(post.getUserId(),
-                post.getDate(),
-                post.getProduct(),
-                post.getCategory(),
-                post.getPrice()).anyMatch(Objects::isNull);
-    }
 }

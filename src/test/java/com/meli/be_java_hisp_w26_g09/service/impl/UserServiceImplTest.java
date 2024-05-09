@@ -1,5 +1,6 @@
 package com.meli.be_java_hisp_w26_g09.service.impl;
 
+import com.meli.be_java_hisp_w26_g09.dto.ExceptionDTO;
 import com.meli.be_java_hisp_w26_g09.dto.RoleDTO;
 import com.meli.be_java_hisp_w26_g09.dto.UserDTO;
 import com.meli.be_java_hisp_w26_g09.entity.User;
@@ -208,7 +209,7 @@ class UserServiceImplTest {
     @DisplayName("get followeds by id customer sorted in ascending order")
     void testGetFollowedsByIdAscendingSuccessful() throws IOException {
         // arrange
-        userDTO = JsonUtil.readJsonFromFile("followedorder/ascendingorder.json", UserDTO.class);
+        userDTO = JsonUtil.readJsonFromFile("followed/ordered/responseDTOAsc.json", UserDTO.class);
         String order = "name_asc";
 
         when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
@@ -226,7 +227,7 @@ class UserServiceImplTest {
     @DisplayName("get followeds by id sorted in descending order")
     void testGetFollowedsByIdDescendingSuccessful() throws IOException {
         // arrange
-        userDTO = JsonUtil.readJsonFromFile("followedorder/descendingorder.json", UserDTO.class);
+        userDTO = JsonUtil.readJsonFromFile("followed/ordered/responseDTODesc.json", UserDTO.class);
         String order = "name_desc";
 
         when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
@@ -242,16 +243,18 @@ class UserServiceImplTest {
 
     @Test
     @DisplayName("Get Followed by id, when user by id not found")
-    void testGetFollowedsById_UserNotFoundException() {
+    void testGetFollowedsById_UserNotFoundException() throws IOException {
         // arrange
         String order = "name_asc";
+        ExceptionDTO exceptionDTO = JsonUtil.readJsonFromFile("followed/notfound/exceptionDTO.json",
+                ExceptionDTO.class);
         when(userRepository.findById(user.getUserId())).thenReturn(Optional.empty());
 
         // act and assert
         NotFoundException notFoundException = assertThrows(NotFoundException.class,
                 () -> userService.getFollowedByIdOrdered(user.getUserId(), order));
 
-        assertEquals("No information was found about those followed.", notFoundException.getMessage());
+        assertEquals(exceptionDTO.getMessage(), notFoundException.getMessage());
     }
 
     @Test
@@ -272,7 +275,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Get followeds by id, when is bad request")
+    @DisplayName("Get followeds by id, when order type is bad request")
     void testGetFollowedById_BadRequestException() {
         // arrange
         String order = "name_ascending";
@@ -288,11 +291,11 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("get followers by id customer sorted in ascending order")
+    @DisplayName("get followers by id customer ordered in ascending order")
     void testGetFollowersByIdAscendingSuccessful() throws IOException {
         // arrange
         user.getRole().setIdRole(Role.ID_SELLER);
-        userDTO = JsonUtil.readJsonFromFile("followersorder/ascendingorder.json", UserDTO.class);
+        userDTO = JsonUtil.readJsonFromFile("followers/ordered/responseDTOAsc.json", UserDTO.class);
         List<User> users = JsonUtil.readJsonFromFileToList("core/entity/usersAll.json", User.class);
         String order = "name_asc";
 
@@ -317,7 +320,7 @@ class UserServiceImplTest {
     void testGetFollowersByIdDescendingSuccessful() throws IOException {
         // arrange
         user.getRole().setIdRole(Role.ID_SELLER);
-        userDTO = JsonUtil.readJsonFromFile("followersorder/descendingorder.json", UserDTO.class);
+        userDTO = JsonUtil.readJsonFromFile("followers/ordered/responseDTODesc.json", UserDTO.class);
         List<User> users = JsonUtil.readJsonFromFileToList("core/entity/usersAll.json", User.class);
         String order = "name_desc";
 
@@ -343,7 +346,7 @@ class UserServiceImplTest {
         NotFoundException notFoundException = assertThrows(NotFoundException.class,
                 () -> userService.getFollowersByIdOrdered(user.getUserId(), order));
 
-        assertEquals("No information was found about those followed.", notFoundException.getMessage());
+        assertEquals("No information was found about those followers.", notFoundException.getMessage());
     }
 
     @Test

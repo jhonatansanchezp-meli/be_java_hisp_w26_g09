@@ -49,7 +49,7 @@ public class UserServiceImpl implements IUserService {
     public UserDTO getFollowersById(Integer id) {
         Optional<User> userFollowers = userRepository.findById(id);
         if (userFollowers.isEmpty())
-            throw new NotFoundException("No information was found about those followed.");
+            throw new NotFoundException("No information was found about those followers.");
 
         if (userFollowers.get().getRole() != null && userFollowers.get().getRole().getIdRole().equals(Role.ID_CUSTOMER))
             throw new NotContentFollowedException("The customers don't have an option for followers");

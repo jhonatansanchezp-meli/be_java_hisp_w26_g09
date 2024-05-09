@@ -115,7 +115,7 @@ class PostServiceImplTest {
         String order = "date_desc";
         ProductFollowedListDTO expected = new ProductFollowedListDTO();
         expected.setUserId(userID);
-        expected.setPosts(JsonUtil.readJsonFromFileToList("postsordered/allposts.json", PostForListDTO.class));
+        expected.setPosts(JsonUtil.readJsonFromFileToList("core/entity/allposts.json", PostForListDTO.class));
 
         // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
@@ -136,7 +136,7 @@ class PostServiceImplTest {
         String order = "invalid_order";
         ProductFollowedListDTO expected = new ProductFollowedListDTO();
         expected.setUserId(userID);
-        expected.setPosts(JsonUtil.readJsonFromFileToList("postsordered/allposts.json", PostForListDTO.class));
+        expected.setPosts(JsonUtil.readJsonFromFileToList("core/entity/allposts.json", PostForListDTO.class));
 
         // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
@@ -153,7 +153,7 @@ class PostServiceImplTest {
         String order = "date_asc";
         ProductFollowedListDTO expected = new ProductFollowedListDTO();
         expected.setUserId(userID);
-        expected.setPosts(JsonUtil.readJsonFromFileToList("postsordered/allposts.json", PostForListDTO.class));
+        expected.setPosts(JsonUtil.readJsonFromFileToList("core/entity/allposts.json", PostForListDTO.class));
 
         // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
