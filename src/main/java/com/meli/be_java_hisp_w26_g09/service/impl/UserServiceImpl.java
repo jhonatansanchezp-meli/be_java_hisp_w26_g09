@@ -10,21 +10,25 @@ import com.meli.be_java_hisp_w26_g09.exception.NotFoundException;
 import com.meli.be_java_hisp_w26_g09.util.mapper.UserMapper;
 import com.meli.be_java_hisp_w26_g09.repository.IUserRepository;
 import com.meli.be_java_hisp_w26_g09.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Comparator;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    private IUserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
+    private final String NAME_ASC = "name_asc";
+    private final String NAME_DESC = "name_desc";
+
+    private final IUserRepository userRepository;
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(IUserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public UserDTO getFollowedById(Integer id) {
@@ -70,47 +74,40 @@ public class UserServiceImpl implements IUserService {
 
     public UserDTO getFollowersByIdOrdered(Integer id, String order) {
         UserDTO userFollowerDTO = getFollowersById(id);
-        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order))) {
-            throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
-        }
-        if ("name_asc".equalsIgnoreCase(order)) {
-            userFollowerDTO.setFollowers(userFollowerDTO.getFollowers()
-                    .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUserName))
-                    .collect(Collectors.toList()));
-        } else if ("name_desc".equalsIgnoreCase(order)) {
-            userFollowerDTO.setFollowers(userFollowerDTO.getFollowers()
-                    .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUserName).reversed())
-                    .collect(Collectors.toList()));
-        }
+        validateOrderParameter(order);
+        userFollowerDTO.setFollowers(orderUsers(userFollowerDTO.getFollowers(), order));
         return userFollowerDTO;
     }
 
     @Override
     public UserDTO getFollowedByIdOrdered(Integer id, String order) {
         UserDTO userDTO = getFollowedById(id);
+        validateOrderParameter(order);
+        userDTO.setFollowed(orderUsers(userDTO.getFollowed(), order));
+        return userDTO;
+    }
 
-        if (!("name_asc".equalsIgnoreCase(order) || "name_desc".equalsIgnoreCase(order))) {
+    private List<UserDTO> orderUsers(List<UserDTO> users, String order) {
+        if (NAME_ASC.equalsIgnoreCase(order)) {
+            return users.stream()
+                    .sorted(Comparator.comparing(UserDTO::getUserName))
+                    .toList();
+        } else {
+            return users.stream()
+                    .sorted(Comparator.comparing(UserDTO::getUserName).reversed())
+                    .toList();
+        }
+    }
+
+    private void validateOrderParameter(String order) {
+        if (!(NAME_ASC.equalsIgnoreCase(order) || NAME_DESC.equalsIgnoreCase(order))) {
             throw new BadRequestException("Invalid order parameter. Valid values are 'name_asc' or 'name_desc'.");
         }
-        if ("name_asc".equalsIgnoreCase(order)) {
-            userDTO.setFollowed(userDTO.getFollowed()
-                    .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUserName))
-                    .collect(Collectors.toList()));
-        } else if ("name_desc".equalsIgnoreCase(order)) {
-            userDTO.setFollowed(userDTO.getFollowed()
-                    .stream()
-                    .sorted(Comparator.comparing(UserDTO::getUserName).reversed())
-                    .collect(Collectors.toList()));
-        }
-        return userDTO;
     }
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> userMapper.userToUserDTO(user))
+                .map(userMapper::userToUserDTO)
                 .toList();
     }
 
@@ -120,7 +117,7 @@ public class UserServiceImpl implements IUserService {
         if (userWhoUnfollowOptional.isEmpty()) throw new NotFoundException("User not found");
         if (userWhoUnfollowOptional.get().getRole() == null || userWhoUnfollowOptional.get().getRole().getIdRole().equals(Role.ID_SELLER))
             throw new BadRequestException("The seller can't unfollow to a seller");
-        if(userWhoUnfollowOptional.get().getFollowed() == null || userWhoUnfollowOptional.get().getFollowed().isEmpty())
+        if (userWhoUnfollowOptional.get().getFollowed() == null || userWhoUnfollowOptional.get().getFollowed().isEmpty())
             throw new BadRequestException("The user does not have any followers");
         Optional<User> userToUnfollowOptional = userWhoUnfollowOptional.get().getFollowed().stream()
                 .filter(user -> user.getUserId() == userIdToUnfollow)

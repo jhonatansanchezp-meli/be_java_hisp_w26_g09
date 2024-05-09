@@ -33,21 +33,8 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public ResponseDTO addPost(PostDTO post) {
-        if (post.getPrice() < 0)
-            throw new BadRequestException("The price cannot be negative");
 
-        if (post.getCategory() <= 0)
-            throw new BadRequestException("The category is not valid");
-
-        post.setHasPromo(false);
-        if (post.getDiscount() != null && post.getDiscount() != 0.0)
-            throw new BadRequestException("Cannot add a promo post on this end point");
-
-        post.setDiscount(0.0);
-
-        if (validate(post))
-            throw new BadRequestException("No field can be null");
-
+        validatePostFields(post);
         Optional<User> user = userRepository.findById(post.getUserId());
         if (user.isEmpty())
             throw new BadRequestException("The user_id does not exist ");
@@ -82,7 +69,6 @@ public class PostServiceImpl implements IPostService {
                         && (post.getDate().isBefore(now) || post.getDate().isEqual(now)))
                 .sorted(Comparator.comparing(Post::getDate).reversed())
                 .collect(Collectors.toList());
-
         ProductFollowedListDTO productFollowedListDTO = new ProductFollowedListDTO();
         productFollowedListDTO.setUserId(user.get().getUserId());
         productFollowedListDTO.setPosts(postMapper.postListToPostForListDTOS(followedPostsLastTwoWeeks));
@@ -102,15 +88,31 @@ public class PostServiceImpl implements IPostService {
                     .sorted(Comparator.comparing(PostForListDTO::getDate))
                     .collect(Collectors.toList()));
         }
+
         return productFollowedListDTOSorted;
     }
 
+    private void validatePostFields(PostDTO post) {
+        if (post.getPrice() < 0)
+            throw new BadRequestException("The price cannot be negative");
 
-    private boolean validate(PostDTO post) {
-        return Stream.of(post.getUserId(),
+        if (post.getCategory() <= 0)
+            throw new BadRequestException("The category is not valid");
+
+        post.setHasPromo(false);
+        if (post.getDiscount() != null && post.getDiscount() != 0.0)
+            throw new BadRequestException("Cannot add a promo post on this end point");
+
+        post.setDiscount(0.0);
+
+        if (Stream.of(post.getUserId(),
                 post.getDate(),
                 post.getProduct(),
                 post.getCategory(),
-                post.getPrice()).anyMatch(Objects::isNull);
+                post.getPrice()).anyMatch(Objects::isNull)) {
+            throw new BadRequestException("No field can be null");
+        }
     }
+
+
 }
