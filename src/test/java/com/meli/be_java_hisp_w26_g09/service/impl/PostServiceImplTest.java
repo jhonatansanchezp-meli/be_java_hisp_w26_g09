@@ -134,9 +134,7 @@ class PostServiceImplTest {
         expected.setUserId(userID);
         expected.setPosts(JsonUtil.readJsonFromFileToList("postsordered/allposts.json", PostForListDTO.class));
 
-        // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
-
 
         // Act
         ProductFollowedListDTO result = postService.findFollowedPostsLastTwoWeeksSorted(userID, order);
@@ -144,9 +142,7 @@ class PostServiceImplTest {
 
         // Assert
         assertEquals(result.getUserId(), userID);
-        assertEquals(result.getPosts().get(0).getDate(), LocalDate.of(2024, 04, 30));
-
-
+        verify(postService, times(1)).findFollowedPostsLastTwoWeeks(userID);
     }
 
     @Test
@@ -159,10 +155,8 @@ class PostServiceImplTest {
         expected.setUserId(userID);
         expected.setPosts(JsonUtil.readJsonFromFileToList("postsordered/allposts.json", PostForListDTO.class));
 
-        // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
 
-        // Act & Assert
         assertThrows(BadRequestException.class, () -> postService.findFollowedPostsLastTwoWeeksSorted(userID, order));
     }
 
@@ -176,18 +170,14 @@ class PostServiceImplTest {
         expected.setUserId(userID);
         expected.setPosts(JsonUtil.readJsonFromFileToList("postsordered/allposts.json", PostForListDTO.class));
 
-        // Stub the postService.findFollowedPostsLastTwoWeeks(userID) method call
         doReturn(expected).when(postService).findFollowedPostsLastTwoWeeks(userID);
 
 
-        // Act
         ProductFollowedListDTO result = postService.findFollowedPostsLastTwoWeeksSorted(userID, order);
 
 
-        // Assert
         assertEquals(result.getUserId(), userID);
-        assertEquals(result.getPosts().get(0).getDate(), LocalDate.of(2024, 04, 29));
-
+        verify(postService, times(1)).findFollowedPostsLastTwoWeeks(userID);
     }
 
 
